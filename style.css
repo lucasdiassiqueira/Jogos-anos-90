@@ -9,28 +9,32 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #0088cc; /* Fundo azul */
-    color: white;
+    background-color: #2A6DA9; /* Fundo do mar */
     font-family: 'Arial', sans-serif;
-    flex-direction: column;
 }
 
 #gameArea {
     text-align: center;
+    border-radius: 20px; /* Cantos arredondados */
+    padding: 20px;
+    background-color: #1B4F68; /* Área do jogo com cor mais escura */
 }
 
 h1 {
-    font-size: 36px;
+    font-size: 24px;
+    color: white;
     margin-bottom: 10px;
 }
 
 #gameCanvas {
+    border-radius: 10px; /* Cantos arredondados no canvas */
     border: 3px solid #fff;
+    background-color: #4B89B9; /* Cor do fundo do jogo */
 }
 
 #score {
-    margin-top: 10px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
+    color: white;
+    margin-top: 10px;
 }
-
