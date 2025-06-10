@@ -1,53 +1,53 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const snakeSize = 10;
-let snake = [{ x: 150, y: 150 }];
+const fishSize = 10; // Tamanho do peixe
+let fish = [{ x: 150, y: 150 }];
 let direction = "RIGHT";
 let food = { x: 100, y: 100 };
 let score = 0;
 
-function drawSnake() {
-    snake.forEach((segment) => {
-        ctx.fillStyle = "#00FF00"; // Cor da cobra
-        ctx.fillRect(segment.x, segment.y, snakeSize, snakeSize);
+function drawFish() {
+    fish.forEach((segment, index) => {
+        ctx.fillStyle = "#FF4500"; // Cor do peixe (laranja)
+        ctx.fillRect(segment.x, segment.y, fishSize, fishSize);
     });
 }
 
 function drawFood() {
-    ctx.fillStyle = "#FF0000"; // Cor da comida
-    ctx.fillRect(food.x, food.y, snakeSize, snakeSize);
+    ctx.fillStyle = "#FFD700"; // Cor dos "pontinhos" (amarelo)
+    ctx.fillRect(food.x, food.y, fishSize, fishSize);
 }
 
-function moveSnake() {
-    const head = { ...snake[0] };
+function moveFish() {
+    const head = { ...fish[0] };
 
-    if (direction === "LEFT") head.x -= snakeSize;
-    if (direction === "RIGHT") head.x += snakeSize;
-    if (direction === "UP") head.y -= snakeSize;
-    if (direction === "DOWN") head.y += snakeSize;
+    if (direction === "LEFT") head.x -= fishSize;
+    if (direction === "RIGHT") head.x += fishSize;
+    if (direction === "UP") head.y -= fishSize;
+    if (direction === "DOWN") head.y += fishSize;
 
-    snake.unshift(head);
+    fish.unshift(head);
 
     if (head.x === food.x && head.y === food.y) {
         score += 10;
         food = generateFood();
     } else {
-        snake.pop();
+        fish.pop();
     }
 }
 
 function generateFood() {
-    const x = Math.floor(Math.random() * (canvas.width / snakeSize)) * snakeSize;
-    const y = Math.floor(Math.random() * (canvas.height / snakeSize)) * snakeSize;
+    const x = Math.floor(Math.random() * (canvas.width / fishSize)) * fishSize;
+    const y = Math.floor(Math.random() * (canvas.height / fishSize)) * fishSize;
     return { x, y };
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawSnake();
+    drawFish();
     drawFood();
-    moveSnake();
+    moveFish();
     document.getElementById("score").innerText = `Pontuação: ${score}`;
 }
 
@@ -67,13 +67,13 @@ function changeDirection(event) {
 }
 
 function gameOver() {
-    const head = snake[0];
+    const head = fish[0];
     if (
         head.x < 0 ||
         head.x >= canvas.width ||
         head.y < 0 ||
         head.y >= canvas.height ||
-        snake.slice(1).some((segment) => segment.x === head.x && segment.y === head.y)
+        fish.slice(1).some((segment) => segment.x === head.x && segment.y === head.y)
     ) {
         clearInterval(gameInterval);
         alert(`Game Over! Sua pontuação foi: ${score}`);

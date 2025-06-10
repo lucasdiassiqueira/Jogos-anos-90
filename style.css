@@ -9,9 +9,10 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #222;
-    color: #fff;
+    background-color: #0088cc; /* Fundo azul */
+    color: white;
     font-family: 'Arial', sans-serif;
+    flex-direction: column;
 }
 
 #gameArea {
@@ -19,15 +20,17 @@ body {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 36px;
     margin-bottom: 10px;
 }
 
 #gameCanvas {
-    border: 2px solid #fff;
+    border: 3px solid #fff;
 }
 
 #score {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
 }
+
