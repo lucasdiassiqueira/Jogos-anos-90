@@ -1,40 +1,36 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #2A6DA9; /* Fundo do mar */
-    font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-#gameArea {
-    text-align: center;
-    border-radius: 20px; /* Cantos arredondados */
-    padding: 20px;
-    background-color: #1B4F68; /* Área do jogo com cor mais escura */
+.game-container {
+  background-color: #4CAF50;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-h1 {
-    font-size: 24px;
-    color: white;
-    margin-bottom: 10px;
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 10px;
 }
 
-#gameCanvas {
-    border-radius: 10px; /* Cantos arredondados no canvas */
-    border: 3px solid #fff;
-    background-color: #4B89B9; /* Cor do fundo do jogo */
-}
-
-#score {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    margin-top: 10px;
+canvas {
+  background-image: linear-gradient(45deg, #a8e063 25%, transparent 25%),
+                    linear-gradient(-45deg, #a8e063 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #a8e063 75%),
+                    linear-gradient(-45deg, transparent 75%, #a8e063 75%);
+  background-size: 40px 40px;
+  background-color: #d4fc79;
+  border: 2px solid #388e3c;
+  border-radius: 8px;
 }
