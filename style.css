@@ -1,36 +1,15 @@
 body {
-  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
-  font-family: Arial, sans-serif;
 }
-
-.game-container {
-  background-color: #4CAF50;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-
-.header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 24px;
-  color: white;
-  margin-bottom: 10px;
-}
-
 canvas {
-  background-image: linear-gradient(45deg, #a8e063 25%, transparent 25%),
-                    linear-gradient(-45deg, #a8e063 25%, transparent 25%),
-                    linear-gradient(45deg, transparent 75%, #a8e063 75%),
-                    linear-gradient(-45deg, transparent 75%, #a8e063 75%);
-  background-size: 40px 40px;
-  background-color: #d4fc79;
-  border: 2px solid #388e3c;
-  border-radius: 8px;
+  border: 2px solid white;
+  background-image: url('https://i.imgur.com/taSLDn8.jpg'); /* Grama */
+  background-size: cover;
+  background-position: center;
 }
