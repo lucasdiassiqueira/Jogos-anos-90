@@ -10,7 +10,7 @@ const player1 = {
   speed: 5,
   img: new Image()
 };
-player1.img.src = 'jogador1.png'; // ajuste o caminho se necessário
+player1.img.src = 'jogador.png'; // ajuste o caminho se necessário
 
 const player2 = {
   x: canvas.width - 20 - playerWidth,
