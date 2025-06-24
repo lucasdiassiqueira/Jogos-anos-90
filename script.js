@@ -10,7 +10,7 @@ const player1 = {
   speed: 5,
   img: new Image()
 };
-player1.img.src = 'jogador.png'; // ajuste o caminho se necessário
+player1.img.src = 'jogador1.png';
 
 const player2 = {
   x: canvas.width - 20 - playerWidth,
@@ -18,15 +18,20 @@ const player2 = {
   speed: 5,
   img: new Image()
 };
-player2.img.src = 'jogador2.png'; // ajuste o caminho se necessário
+player2.img.src = 'jogador2.png';
 
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  radius: 10,
+  radius: 12,
   speedX: 4,
-  speedY: 4
+  speedY: 4,
+  img: new Image()
 };
+ball.img.src = 'https://cdn-icons-png.flaticon.com/512/861/861512.png'; // bola de futebol
+
+let score1 = 0;
+let score2 = 0;
 
 let keys = {};
 
@@ -49,9 +54,14 @@ function moveBall() {
   ball.y += ball.speedY;
 
   // rebote vertical
-  if (ball.y < 0 || ball.y > canvas.height) ball.speedY *= -1;
+  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height)
+    ball.speedY *= -1;
 
-  // colisão jogador 1
+  // rebote lateral
+  if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width)
+    ball.speedX *= -1;
+
+  // colisão com jogador 1
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
     ball.y > player1.y &&
@@ -60,7 +70,7 @@ function moveBall() {
     ball.speedX *= -1;
   }
 
-  // colisão jogador 2
+  // colisão com jogador 2
   if (
     ball.x + ball.radius > player2.x &&
     ball.y > player2.y &&
@@ -68,42 +78,49 @@ function moveBall() {
   ) {
     ball.speedX *= -1;
   }
-
-  // reset se sair da tela
-  if (ball.x < 0 || ball.x > canvas.width) {
-    ball.x = canvas.width / 2;
-    ball.y = canvas.height / 2;
-    ball.speedX *= -1;
-    ball.speedY = 4 * (Math.random() > 0.5 ? 1 : -1);
-  }
 }
 
-function drawMidLine() {
+function drawMidField() {
+  // linha central
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.setLineDash([10, 10]);
+  ctx.setLineDash([15, 15]);
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
   ctx.setLineDash([]);
+
+  // círculo central
   ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height / 2, 40, 0, Math.PI * 2);
+  ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
   ctx.stroke();
+}
+
+function drawGoals() {
+  ctx.fillStyle = "rgba(255,255,255,0.4)";
+  ctx.fillRect(0, canvas.height / 3, 10, canvas.height / 3);
+  ctx.fillRect(canvas.width - 10, canvas.height / 3, 10, canvas.height / 3);
+}
+
+function drawScore() {
+  ctx.fillStyle = "white";
+  ctx.font = "36px Arial";
+  ctx.fillText(score1, canvas.width / 4, 50);
+  ctx.fillText(score2, (canvas.width * 3) / 4, 50);
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawMidLine();
+  drawMidField();
+  drawGoals();
+  drawScore();
 
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
 
-  ctx.fillStyle = "white";
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.drawImage(ball.img, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
 }
 
 function gameLoop() {
