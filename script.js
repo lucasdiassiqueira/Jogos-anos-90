@@ -10,7 +10,7 @@ const player1 = {
   speed: 5,
   img: new Image()
 };
-player1.img.src = 'jogador.png';
+player1.img.src = 'jogador (2).png';
 
 const player2 = {
   x: canvas.width - 20 - playerWidth,
@@ -20,13 +20,13 @@ const player2 = {
 };
 player2.img.src = 'jogador2.png';
 
-let initialSpeed = 2;       // velocidade inicial da bola
-let speedIncrease = 0.1;    // aumento mais suave
+let initialSpeed = 4;      
+let speedIncrease = 0.5;    
 
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  radius: 15,               // aumentei um pouco pra colisão ficar melhor
+  radius: 15,               
   speedX: 0,
   speedY: 0,
   img: new Image(),
@@ -40,7 +40,7 @@ const ball = {
     this.speedY = speed * directionY;
   }
 };
-ball.img.src = 'bola.jpg';
+ball.img.src = 'bola.png';
 
 let score1 = 0;
 let score2 = 0;
