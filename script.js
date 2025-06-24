@@ -18,22 +18,28 @@ const player2 = {
   speed: 5,
   img: new Image()
 };
-player2.img.src = 'jogador2.png'; 
+player2.img.src = 'jogador2.png';
+
+let initialSpeed = 2;       // velocidade inicial
+let speedIncrease = 0.2;    // quanto a velocidade aumenta a cada ponto
 
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   radius: 12,
-  speedX: 4,
-  speedY: 4,
-  img: new Image()
+  speedX: initialSpeed * (Math.random() > 0.5 ? 1 : -1),
+  speedY: initialSpeed * (Math.random() > 0.5 ? 1 : -1),
+  img: new Image(),
+  reset: function () {
+    this.x = canvas.width / 2;
+    this.y = canvas.height / 2;
+    const directionX = Math.random() > 0.5 ? 1 : -1;
+    const directionY = Math.random() > 0.5 ? 1 : -1;
+    this.speedX = (initialSpeed + (score1 + score2) * speedIncrease) * directionX;
+    this.speedY = (initialSpeed + (score1 + score2) * speedIncrease) * directionY;
+  }
 };
-
-ball.img.src = 'bola.jpg'; 
-ball.img.onload = () => {
-  gameLoop();
-};
-
+ball.img.src = 'bola.jpg';
 
 let score1 = 0;
 let score2 = 0;
@@ -62,9 +68,19 @@ function moveBall() {
   if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height)
     ball.speedY *= -1;
 
-  // rebote lateral
-  if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width)
-    ball.speedX *= -1;
+  // gol jogador 2 (esquerda)
+  if (ball.x - ball.radius < 10 && ball.y > canvas.height / 4 && ball.y < canvas.height * 3 / 4) {
+    score2++;
+    ball.reset();
+    return;
+  }
+
+  // gol jogador 1 (direita)
+  if (ball.x + ball.radius > canvas.width - 10 && ball.y > canvas.height / 4 && ball.y < canvas.height * 3 / 4) {
+    score1++;
+    ball.reset();
+    return;
+  }
 
   // colisão com jogador 1
   if (
@@ -86,7 +102,6 @@ function moveBall() {
 }
 
 function drawMidField() {
-  // linha central
   ctx.strokeStyle = "white";
   ctx.lineWidth = 6;
   ctx.beginPath();
@@ -96,7 +111,6 @@ function drawMidField() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // círculo central
   ctx.beginPath();
   ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
   ctx.stroke();
@@ -104,8 +118,8 @@ function drawMidField() {
 
 function drawGoals() {
   ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.fillRect(0, canvas.height / 3, 10, canvas.height / 3);
-  ctx.fillRect(canvas.width - 10, canvas.height / 3, 10, canvas.height / 3);
+  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2); // gol maior
+  ctx.fillRect(canvas.width - 10, canvas.height / 4, 10, canvas.height / 2);
 }
 
 function drawScore() {
@@ -135,4 +149,6 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+ball.img.onload = () => {
+  gameLoop();
+};
