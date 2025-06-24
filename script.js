@@ -18,7 +18,7 @@ const player2 = {
   speed: 5,
   img: new Image()
 };
-player2.img.src = 'jogador2.png; 
+player2.img.src = 'jogador2.png'; 
 
 const ball = {
   x: canvas.width / 2,
