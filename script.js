@@ -20,23 +20,24 @@ const player2 = {
 };
 player2.img.src = 'jogador2.png';
 
-let initialSpeed = 2;       // velocidade inicial
-let speedIncrease = 0.2;    // quanto a velocidade aumenta a cada ponto
+let initialSpeed = 2;       // velocidade inicial da bola
+let speedIncrease = 0.1;    // aumento mais suave
 
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  radius: 12,
-  speedX: initialSpeed * (Math.random() > 0.5 ? 1 : -1),
-  speedY: initialSpeed * (Math.random() > 0.5 ? 1 : -1),
+  radius: 15,               // aumentei um pouco pra colisão ficar melhor
+  speedX: 0,
+  speedY: 0,
   img: new Image(),
   reset: function () {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     const directionX = Math.random() > 0.5 ? 1 : -1;
     const directionY = Math.random() > 0.5 ? 1 : -1;
-    this.speedX = (initialSpeed + (score1 + score2) * speedIncrease) * directionX;
-    this.speedY = (initialSpeed + (score1 + score2) * speedIncrease) * directionY;
+    const speed = initialSpeed + (score1 + score2) * speedIncrease;
+    this.speedX = speed * directionX;
+    this.speedY = speed * directionY;
   }
 };
 ball.img.src = 'bola.jpg';
@@ -47,56 +48,73 @@ let score2 = 0;
 let keys = {};
 
 document.addEventListener("keydown", (e) => {
-  keys[e.key] = true;
+  keys[e.key.toLowerCase()] = true;
 });
 document.addEventListener("keyup", (e) => {
-  keys[e.key] = false;
+  keys[e.key.toLowerCase()] = false;
 });
 
 function movePlayers() {
   if (keys["w"] && player1.y > 0) player1.y -= player1.speed;
   if (keys["s"] && player1.y < canvas.height - playerHeight) player1.y += player1.speed;
-  if (keys["ArrowUp"] && player2.y > 0) player2.y -= player2.speed;
-  if (keys["ArrowDown"] && player2.y < canvas.height - playerHeight) player2.y += player2.speed;
+  if (keys["arrowup"] && player2.y > 0) player2.y -= player2.speed;
+  if (keys["arrowdown"] && player2.y < canvas.height - playerHeight) player2.y += player2.speed;
 }
 
 function moveBall() {
   ball.x += ball.speedX;
   ball.y += ball.speedY;
 
-  // rebote vertical
-  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height)
+  // Rebote vertical (superior e inferior)
+  if (ball.y - ball.radius < 0) {
+    ball.y = ball.radius;
     ball.speedY *= -1;
+  } else if (ball.y + ball.radius > canvas.height) {
+    ball.y = canvas.height - ball.radius;
+    ball.speedY *= -1;
+  }
 
-  // gol jogador 2 (esquerda)
-  if (ball.x - ball.radius < 10 && ball.y > canvas.height / 4 && ball.y < canvas.height * 3 / 4) {
+  // Verifica gol jogador 2 (lado esquerdo)
+  if (
+    ball.x - ball.radius < 10 &&
+    ball.y > canvas.height / 4 &&
+    ball.y < (canvas.height * 3) / 4
+  ) {
     score2++;
     ball.reset();
     return;
   }
 
-  // gol jogador 1 (direita)
-  if (ball.x + ball.radius > canvas.width - 10 && ball.y > canvas.height / 4 && ball.y < canvas.height * 3 / 4) {
+  // Verifica gol jogador 1 (lado direito)
+  if (
+    ball.x + ball.radius > canvas.width - 10 &&
+    ball.y > canvas.height / 4 &&
+    ball.y < (canvas.height * 3) / 4
+  ) {
     score1++;
     ball.reset();
     return;
   }
 
-  // colisão com jogador 1
+  // Colisão com jogador 1
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
-    ball.y > player1.y &&
-    ball.y < player1.y + playerHeight
+    ball.x - ball.radius > player1.x &&  // Ajuste: bola precisa estar na frente do jogador
+    ball.y + ball.radius > player1.y &&
+    ball.y - ball.radius < player1.y + playerHeight
   ) {
+    ball.x = player1.x + playerWidth + ball.radius; // evita que fique dentro do jogador
     ball.speedX *= -1;
   }
 
-  // colisão com jogador 2
+  // Colisão com jogador 2
   if (
     ball.x + ball.radius > player2.x &&
-    ball.y > player2.y &&
-    ball.y < player2.y + playerHeight
+    ball.x + ball.radius < player2.x + playerWidth && // Ajuste análogo
+    ball.y + ball.radius > player2.y &&
+    ball.y - ball.radius < player2.y + playerHeight
   ) {
+    ball.x = player2.x - ball.radius; // evita que fique dentro do jogador
     ball.speedX *= -1;
   }
 }
@@ -118,7 +136,7 @@ function drawMidField() {
 
 function drawGoals() {
   ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2); // gol maior
+  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2);
   ctx.fillRect(canvas.width - 10, canvas.height / 4, 10, canvas.height / 2);
 }
 
@@ -150,5 +168,6 @@ function gameLoop() {
 }
 
 ball.img.onload = () => {
+  ball.reset(); // posiciona bola com velocidade inicial
   gameLoop();
 };
