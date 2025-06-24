@@ -10,7 +10,7 @@ const player1 = {
   speed: 5,
   img: new Image()
 };
-player1.img.src = 'jogador1.png';
+player1.img.src = 'jogador.png';
 
 const player2 = {
   x: canvas.width - 20 - playerWidth,
@@ -18,7 +18,7 @@ const player2 = {
   speed: 5,
   img: new Image()
 };
-player2.img.src = 'jogador2.png';
+player2.img.src = 'jogador2.png; 
 
 const ball = {
   x: canvas.width / 2,
@@ -28,7 +28,7 @@ const ball = {
   speedY: 4,
   img: new Image()
 };
-ball.img.src = 'https://cdn-icons-png.flaticon.com/512/861/861512.png'; // bola de futebol
+ball.img.src = 'bola.jpg'; 
 
 let score1 = 0;
 let score2 = 0;
