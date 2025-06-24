@@ -28,7 +28,12 @@ const ball = {
   speedY: 4,
   img: new Image()
 };
+
 ball.img.src = 'bola.jpg'; 
+ball.img.onload = () => {
+  gameLoop();
+};
+
 
 let score1 = 0;
 let score2 = 0;
