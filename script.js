@@ -74,50 +74,52 @@ function moveBall() {
     ball.speedY *= -1;
   }
 
-  // Verifica gol jogador 2 (lado esquerdo)
-  if (
-    ball.x - ball.radius < 10 &&
-    ball.y > canvas.height / 4 &&
-    ball.y < (canvas.height * 3) / 4
-  ) {
+  const goalTop = canvas.height / 4;
+  const goalBottom = (canvas.height * 3) / 4;
+
+  // Gol jogador 2 (esquerda)
+  if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
     score2++;
     ball.reset();
     return;
   }
 
-  // Verifica gol jogador 1 (lado direito)
-  if (
-    ball.x + ball.radius > canvas.width - 10 &&
-    ball.y > canvas.height / 4 &&
-    ball.y < (canvas.height * 3) / 4
-  ) {
+  // Gol jogador 1 (direita)
+  if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
     score1++;
     ball.reset();
+    return;
+  }
+
+  // Rebote nas paredes atrás do gol (evita marcar gol)
+  if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+    ball.speedX *= -1;
     return;
   }
 
   // Colisão com jogador 1
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
-    ball.x - ball.radius > player1.x &&  // Ajuste: bola precisa estar na frente do jogador
+    ball.x - ball.radius > player1.x &&
     ball.y + ball.radius > player1.y &&
     ball.y - ball.radius < player1.y + playerHeight
   ) {
-    ball.x = player1.x + playerWidth + ball.radius; // evita que fique dentro do jogador
+    ball.x = player1.x + playerWidth + ball.radius;
     ball.speedX *= -1;
   }
 
   // Colisão com jogador 2
   if (
     ball.x + ball.radius > player2.x &&
-    ball.x + ball.radius < player2.x + playerWidth && // Ajuste análogo
+    ball.x + ball.radius < player2.x + playerWidth &&
     ball.y + ball.radius > player2.y &&
     ball.y - ball.radius < player2.y + playerHeight
   ) {
-    ball.x = player2.x - ball.radius; // evita que fique dentro do jogador
+    ball.x = player2.x - ball.radius;
     ball.speedX *= -1;
   }
 }
+
 
 function drawMidField() {
   ctx.strokeStyle = "white";
@@ -135,10 +137,43 @@ function drawMidField() {
 }
 
 function drawGoals() {
-  ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2);
-  ctx.fillRect(canvas.width - 10, canvas.height / 4, 10, canvas.height / 2);
+  const goalTop = canvas.height / 4;
+  const goalHeight = canvas.height / 2;
+
+  // Gols
+  ctx.fillStyle = "rgb(255, 255, 255)";
+  ctx.fillRect(0, goalTop, 10, goalHeight); // Gol esquerdo
+  ctx.fillRect(canvas.width - 10, goalTop, 10, goalHeight); // Gol direito
+
+  // Redes (linhas horizontais)
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= goalHeight; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(10, goalTop + i);
+    ctx.lineTo(30, goalTop + i); // rede esquerda
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - 10, goalTop + i);
+    ctx.lineTo(canvas.width - 30, goalTop + i); // rede direita
+    ctx.stroke();
+  }
+
+  // Redes (linhas verticais)
+  for (let i = 10; i <= 30; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(i, goalTop);
+    ctx.lineTo(i, goalTop + goalHeight); // rede esquerda
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - i, goalTop);
+    ctx.lineTo(canvas.width - i, goalTop + goalHeight); // rede direita
+    ctx.stroke();
+  }
 }
+
 
 function drawScore() {
   ctx.fillStyle = "white";
