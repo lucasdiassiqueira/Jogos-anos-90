@@ -65,22 +65,34 @@ function moveBall() {
   const goalTop = canvas.height / 4;
   const goalBottom = canvas.height * 3 / 4;
 
+  // Gol do jogador 2
   if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
     score2++;
-    showRestartScreen("Jogador 2 marcou!");
+    if (score2 >= 5) {
+      showRestartScreen("Jogador 2 venceu!");
+    } else {
+      ball.reset();
+    }
     return;
   }
 
+  // Gol do jogador 1
   if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
     score1++;
-    showRestartScreen("Jogador 1 marcou!");
+    if (score1 >= 5) {
+      showRestartScreen("Jogador 1 venceu!");
+    } else {
+      ball.reset();
+    }
     return;
   }
 
+  // Rebote nas laterais (fora do gol)
   if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
     ball.speedX *= -1;
   }
 
+  // Colisão com jogador 1
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
     ball.x > player1.x &&
@@ -91,6 +103,7 @@ function moveBall() {
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
+  // Colisão com jogador 2
   if (
     ball.x + ball.radius > player2.x &&
     ball.x < player2.x + playerWidth &&
@@ -180,11 +193,13 @@ function gameLoop() {
 function showRestartScreen(winner) {
   paused = true;
   document.getElementById("winnerText").textContent = winner;
-  document.getElementById("scoreText").textContent = `Placar: ${score1} x ${score2}`;
+  document.getElementById("scoreText").textContent = `Placar final: ${score1} x ${score2}`;
   document.getElementById("restartScreen").style.display = "flex";
 }
 
 function restartGame() {
+  score1 = 0;
+  score2 = 0;
   paused = false;
   document.getElementById("restartScreen").style.display = "none";
   ball.reset();
