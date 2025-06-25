@@ -137,6 +137,10 @@ function drawMidField() {
 }
 
 function drawGoals() {
+  ctx.fillStyle = "rgb(255, 255, 255)";
+  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2);
+  ctx.fillRect(canvas.width - 10, canvas.height / 4, 10, canvas.height / 2);
+
   const goalTop = canvas.height / 4;
   const goalHeight = canvas.height / 2;
 
@@ -173,7 +177,6 @@ function drawGoals() {
     ctx.stroke();
   }
 }
-
 
 function drawScore() {
   ctx.fillStyle = "white";
