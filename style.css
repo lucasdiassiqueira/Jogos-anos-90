@@ -6,10 +6,54 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: relative;
 }
 
 canvas {
   background-color: rgba(0, 128, 0, 0.7); /* fundo verde translúcido */
   border: 4px solid white;
   box-shadow: 0 0 20px black;
+}
+
+/* Tela de reinício */
+#restartScreen {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  z-index: 10;
+}
+
+#restartScreen h1 {
+  font-size: 2rem;
+}
+
+#restartScreen p {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
+
+#restartScreen button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+#restartScreen button:hover {
+  background-color: #ddd;
 }

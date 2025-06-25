@@ -20,39 +20,32 @@ const player2 = {
 };
 player2.img.src = 'jogador2.png';
 
-let initialSpeed = 4;      
-let speedIncrease = 0.5;    
-
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  radius: 15,               
+  radius: 15,
   speedX: 0,
   speedY: 0,
   img: new Image(),
-  reset: function () {
+  reset() {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
-    const directionX = Math.random() > 0.5 ? 1 : -1;
-    const directionY = Math.random() > 0.5 ? 1 : -1;
-    const speed = initialSpeed + (score1 + score2) * speedIncrease;
-    this.speedX = speed * directionX;
-    this.speedY = speed * directionY;
+    const dirX = Math.random() > 0.5 ? 1 : -1;
+    const dirY = Math.random() > 0.5 ? 1 : -1;
+    const speed = 4 + (score1 + score2) * 0.5;
+    this.speedX = speed * dirX;
+    this.speedY = speed * dirY;
   }
 };
 ball.img.src = 'bola.png';
 
 let score1 = 0;
 let score2 = 0;
-
 let keys = {};
+let paused = false;
 
-document.addEventListener("keydown", (e) => {
-  keys[e.key.toLowerCase()] = true;
-});
-document.addEventListener("keyup", (e) => {
-  keys[e.key.toLowerCase()] = false;
-});
+document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
 function movePlayers() {
   if (keys["w"] && player1.y > 0) player1.y -= player1.speed;
@@ -65,67 +58,57 @@ function moveBall() {
   ball.x += ball.speedX;
   ball.y += ball.speedY;
 
-  // Rebote vertical (superior e inferior)
-  if (ball.y - ball.radius < 0) {
-    ball.y = ball.radius;
-    ball.speedY *= -1;
-  } else if (ball.y + ball.radius > canvas.height) {
-    ball.y = canvas.height - ball.radius;
+  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
     ball.speedY *= -1;
   }
 
   const goalTop = canvas.height / 4;
-  const goalBottom = (canvas.height * 3) / 4;
+  const goalBottom = canvas.height * 3 / 4;
 
-  // Gol jogador 2 (esquerda)
   if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
     score2++;
-    ball.reset();
+    showRestartScreen("Jogador 2 marcou!");
     return;
   }
 
-  // Gol jogador 1 (direita)
   if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
     score1++;
-    ball.reset();
+    showRestartScreen("Jogador 1 marcou!");
     return;
   }
 
-  // Rebote nas paredes atrás do gol (evita marcar gol)
   if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
     ball.speedX *= -1;
-    return;
   }
 
-  // Colisão com jogador 1
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
-    ball.x - ball.radius > player1.x &&
+    ball.x > player1.x &&
     ball.y + ball.radius > player1.y &&
     ball.y - ball.radius < player1.y + playerHeight
   ) {
-    ball.x = player1.x + playerWidth + ball.radius;
     ball.speedX *= -1;
+    ball.x = player1.x + playerWidth + ball.radius;
   }
 
-  // Colisão com jogador 2
   if (
     ball.x + ball.radius > player2.x &&
-    ball.x + ball.radius < player2.x + playerWidth &&
+    ball.x < player2.x + playerWidth &&
     ball.y + ball.radius > player2.y &&
     ball.y - ball.radius < player2.y + playerHeight
   ) {
-    ball.x = player2.x - ball.radius;
     ball.speedX *= -1;
+    ball.x = player2.x - ball.radius;
   }
 }
 
+function drawField() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function drawMidField() {
   ctx.strokeStyle = "white";
   ctx.lineWidth = 6;
-  ctx.beginPath();
   ctx.setLineDash([15, 15]);
+  ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
@@ -134,78 +117,81 @@ function drawMidField() {
   ctx.beginPath();
   ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
   ctx.stroke();
-}
 
-function drawGoals() {
-  ctx.fillStyle = "rgb(255, 255, 255)";
-  ctx.fillRect(0, canvas.height / 4, 10, canvas.height / 2);
-  ctx.fillRect(canvas.width - 10, canvas.height / 4, 10, canvas.height / 2);
+  drawGoals();
 
-  const goalTop = canvas.height / 4;
-  const goalHeight = canvas.height / 2;
-
-  // Gols
-  ctx.fillStyle = "rgb(255, 255, 255)";
-  ctx.fillRect(0, goalTop, 10, goalHeight); // Gol esquerdo
-  ctx.fillRect(canvas.width - 10, goalTop, 10, goalHeight); // Gol direito
-
-  // Redes (linhas horizontais)
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= goalHeight; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(10, goalTop + i);
-    ctx.lineTo(30, goalTop + i); // rede esquerda
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - 10, goalTop + i);
-    ctx.lineTo(canvas.width - 30, goalTop + i); // rede direita
-    ctx.stroke();
-  }
-
-  // Redes (linhas verticais)
-  for (let i = 10; i <= 30; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(i, goalTop);
-    ctx.lineTo(i, goalTop + goalHeight); // rede esquerda
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - i, goalTop);
-    ctx.lineTo(canvas.width - i, goalTop + goalHeight); // rede direita
-    ctx.stroke();
-  }
-}
-
-function drawScore() {
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
   ctx.fillText(score1, canvas.width / 4, 50);
   ctx.fillText(score2, (canvas.width * 3) / 4, 50);
 }
 
+function drawGoals() {
+  const goalTop = canvas.height / 4;
+  const goalHeight = canvas.height / 2;
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(20, goalTop, 10, goalHeight);
+  ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
+
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= goalHeight; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(0, goalTop + i);
+    ctx.lineTo(20, goalTop + i);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width, goalTop + i);
+    ctx.lineTo(canvas.width - 20, goalTop + i);
+    ctx.stroke();
+  }
+
+  for (let i = 0; i <= 20; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(i, goalTop);
+    ctx.lineTo(i, goalTop + goalHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - i, goalTop);
+    ctx.lineTo(canvas.width - i, goalTop + goalHeight);
+    ctx.stroke();
+  }
+}
+
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  drawMidField();
-  drawGoals();
-  drawScore();
-
+  drawField();
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
-
   ctx.drawImage(ball.img, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
 }
 
 function gameLoop() {
-  movePlayers();
-  moveBall();
-  draw();
-  requestAnimationFrame(gameLoop);
+  if (!paused) {
+    movePlayers();
+    moveBall();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+}
+
+function showRestartScreen(winner) {
+  paused = true;
+  document.getElementById("winnerText").textContent = winner;
+  document.getElementById("scoreText").textContent = `Placar: ${score1} x ${score2}`;
+  document.getElementById("restartScreen").style.display = "flex";
+}
+
+function restartGame() {
+  paused = false;
+  document.getElementById("restartScreen").style.display = "none";
+  ball.reset();
+  gameLoop();
 }
 
 ball.img.onload = () => {
-  ball.reset(); // posiciona bola com velocidade inicial
+  ball.reset();
   gameLoop();
 };
