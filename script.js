@@ -140,34 +140,29 @@ function drawCrowd() {
   const spacingY = 24;
   const margin = 24;
 
-  const crowdLeftX = margin - 14;
-  const crowdRightX = canvas.width - margin + 4;
-  const crowdTopY = margin - 20;
-  const crowdBottomY = canvas.height - margin + 4;
+  const crowdLeftX = -16; // fora do campo à esquerda
+  const crowdRightX = canvas.width + 6; // fora do campo à direita
+  const crowdTopY = -16; // fora do campo acima
+  const crowdBottomY = canvas.height + 6; // fora do campo abaixo
 
-  const colsTop = Math.floor((canvas.width - margin * 2) / spacingX);
+  const colsTop = Math.floor(canvas.width / spacingX);
   for (let c = 0; c < colsTop; c++) {
-    const x = margin + c * spacingX;
+    const x = c * spacingX + 6;
     const jump = (c + crowdOffset) % 2 === 0;
     drawPixelFan(x, crowdTopY, '#d40000', '#ffffff', jump);
   }
 
   for (let c = 0; c < colsTop; c++) {
-    const x = margin + c * spacingX;
+    const x = c * spacingX + 6;
     const jump = (c + crowdOffset) % 2 === 0;
     drawPixelFan(x, crowdBottomY, '#d40000', '#ffffff', jump);
   }
 
-  const rowsSide = Math.floor((canvas.height - margin * 2) / spacingY);
+  const rowsSide = Math.floor(canvas.height / spacingY);
   for (let r = 0; r < rowsSide; r++) {
-    const y = margin + r * spacingY;
+    const y = r * spacingY + 12;
     const jump = (r + crowdOffset) % 2 === 0;
     drawPixelFan(crowdLeftX, y, '#d40000', '#ffffff', jump);
-  }
-
-  for (let r = 0; r < rowsSide; r++) {
-    const y = margin + r * spacingY;
-    const jump = (r + crowdOffset) % 2 === 0;
     drawPixelFan(crowdRightX, y, '#d40000', '#ffffff', jump);
   }
 
