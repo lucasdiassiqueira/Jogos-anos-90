@@ -26,6 +26,8 @@ const ball = {
   radius: 15,
   speedX: 0,
   speedY: 0,
+  angle: 0, // ângulo de rotação
+  rotationSpeed: 0.2, // velocidade de rotação
   img: new Image(),
   reset() {
     this.x = canvas.width / 2;
@@ -35,6 +37,7 @@ const ball = {
     const speed = 4 + (score1 + score2) * 0.5;
     this.speedX = speed * dirX;
     this.speedY = speed * dirY;
+    this.angle = 0; // reseta rotação
   }
 };
 ball.img.src = 'bola.png';
@@ -57,6 +60,9 @@ function movePlayers() {
 function moveBall() {
   ball.x += ball.speedX;
   ball.y += ball.speedY;
+
+  // rotação contínua da bola
+  ball.angle += ball.rotationSpeed;
 
   if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
     ball.speedY *= -1;
@@ -178,7 +184,13 @@ function draw() {
   drawField();
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
-  ctx.drawImage(ball.img, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
+
+  // desenha a bola com rotação
+  ctx.save();
+  ctx.translate(ball.x, ball.y);
+  ctx.rotate(ball.angle);
+  ctx.drawImage(ball.img, -ball.radius, -ball.radius, ball.radius * 2, ball.radius * 2);
+  ctx.restore();
 }
 
 function gameLoop() {
@@ -210,3 +222,11 @@ ball.img.onload = () => {
   ball.reset();
   gameLoop();
 };
+
+// Aumenta velocidade a cada 2 segundos
+setInterval(() => {
+  if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
+    ball.speedX *= 1.05;
+    ball.speedY *= 1.05;
+  }
+}, 2000);
