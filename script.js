@@ -140,26 +140,39 @@ function drawPixelFan(x, y, color1, color2, jumping) {
 }
 
 function drawCrowd() {
-  const cols = Math.floor(canvas.width / 12);
-  const rows = 2;
+  const spacingX = 12;
+  const spacingY = 20;
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const x = c * 12 + 5;
-      const y = r * 20 + 10;
-      const jump = (c + crowdOffset) % 2 === 0;
-      drawPixelFan(x, y, '#d40000', '#ffffff', jump); // vermelho e branco
-    }
+  // TOPO - fora do campo
+  const colsTop = Math.floor(canvas.width / spacingX);
+  for (let c = 0; c < colsTop; c++) {
+    const x = c * spacingX + 5;
+    const y = -5; // fora do campo
+    const jump = (c + crowdOffset) % 2 === 0;
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
   }
 
-  // laterais
-  const sideRows = Math.floor(canvas.height / 20);
-  for (let r = 0; r < sideRows; r++) {
-    const y = r * 20 + 10;
-    const jump = (r + crowdOffset) % 2 === 0;
+  // BASE - fora do campo
+  for (let c = 0; c < colsTop; c++) {
+    const x = c * spacingX + 5;
+    const y = canvas.height + 5; // fora do campo abaixo
+    const jump = (c + crowdOffset) % 2 === 0;
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
+  }
 
-    drawPixelFan(5, y, '#d40000', '#ffffff', jump);
-    drawPixelFan(canvas.width - 15, y, '#d40000', '#ffffff', jump);
+  // LATERAL ESQUERDA - fora do campo
+  const rowsSide = Math.floor(canvas.height / spacingY);
+  for (let r = 0; r < rowsSide; r++) {
+    const y = r * spacingY + 10;
+    const jump = (r + crowdOffset) % 2 === 0;
+    drawPixelFan(-8, y, '#d40000', '#ffffff', jump); // esquerda
+  }
+
+  // LATERAL DIREITA - fora do campo
+  for (let r = 0; r < rowsSide; r++) {
+    const y = r * spacingY + 10;
+    const jump = (r + crowdOffset) % 2 === 0;
+    drawPixelFan(canvas.width + 5, y, '#d40000', '#ffffff', jump); // direita
   }
 
   // animação de pulo
