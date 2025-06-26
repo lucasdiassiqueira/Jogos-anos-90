@@ -1,269 +1,131 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const playerWidth = 60;
-const playerHeight = 100;
+canvas.width = 800;
+canvas.height = 500;
 
-const player1 = {
-  x: 20,
-  y: canvas.height / 2 - playerHeight / 2,
-  speed: 5,
-  img: new Image()
-};
-player1.img.src = 'jogador (2).png';
-
-const player2 = {
-  x: canvas.width - 20 - playerWidth,
-  y: canvas.height / 2 - playerHeight / 2,
-  speed: 5,
-  img: new Image()
-};
-player2.img.src = 'jogador2.png';
-
-const ball = {
-  x: canvas.width / 2,
-  y: canvas.height / 2,
-  radius: 15,
-  speedX: 0,
-  speedY: 0,
-  angle: 0,
-  rotationSpeed: 0.2,
-  img: new Image(),
-  reset() {
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
-    const dirX = Math.random() > 0.5 ? 1 : -1;
-    const dirY = Math.random() > 0.5 ? 1 : -1;
-    const speed = 4 + (score1 + score2) * 0.5;
-    this.speedX = speed * dirX;
-    this.speedY = speed * dirY;
-    this.angle = 0;
-  }
-};
-ball.img.src = 'bola.png';
-
-let score1 = 0;
-let score2 = 0;
-let keys = {};
-let paused = false;
-
-// Torcida
-const torcida = [];
-const cols = 40;
-const rows = 3; // menos linhas para arquibancadas
-
-// Torcida acima do campo
-for (let y = 0; y < rows; y++) {
-  for (let x = 0; x < cols; x++) {
-    if (Math.random() < 0.15) continue;
-    torcida.push({
-      x: x * 20 + 10,
-      y: y * 20 + 10 - 60, // acima do campo
-      color: Math.random() > 0.5 ? 'red' : 'white',
-      stripe: Math.random() > 0.5 ? 'black' : 'blue',
-      offset: Math.random() * 5,
-      direction: Math.random() > 0.5 ? 1 : -1
-    });
-  }
-}
-
-// Torcida abaixo do campo
-for (let y = 0; y < rows; y++) {
-  for (let x = 0; x < cols; x++) {
-    if (Math.random() < 0.15) continue;
-    torcida.push({
-      x: x * 20 + 10,
-      y: canvas.height - (rows - y) * 20 + 10 + 60, // abaixo do campo
-      color: Math.random() > 0.5 ? 'red' : 'white',
-      stripe: Math.random() > 0.5 ? 'black' : 'blue',
-      offset: Math.random() * 5,
-      direction: Math.random() > 0.5 ? 1 : -1
-    });
-  }
-}
-
-document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
-
-function movePlayers() {
-  if (keys["w"] && player1.y > 0) player1.y -= player1.speed;
-  if (keys["s"] && player1.y < canvas.height - playerHeight) player1.y += player1.speed;
-  if (keys["arrowup"] && player2.y > 0) player2.y -= player2.speed;
-  if (keys["arrowdown"] && player2.y < canvas.height - playerHeight) player2.y += player2.speed;
-}
-
-function moveBall() {
-  ball.x += ball.speedX;
-  ball.y += ball.speedY;
-  ball.angle += ball.rotationSpeed;
-
-  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
-    ball.speedY *= -1;
-  }
-
-  const goalTop = canvas.height / 4;
-  const goalBottom = canvas.height * 3 / 4;
-
-  if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
-    score2++;
-    if (score2 >= 5) {
-      showRestartScreen("Jogador 2 venceu!");
-    } else {
-      ball.reset();
-    }
-    return;
-  }
-
-  if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
-    score1++;
-    if (score1 >= 5) {
-      showRestartScreen("Jogador 1 venceu!");
-    } else {
-      ball.reset();
-    }
-    return;
-  }
-
-  if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
-    ball.speedX *= -1;
-  }
-
-  if (
-    ball.x - ball.radius < player1.x + playerWidth &&
-    ball.x > player1.x &&
-    ball.y + ball.radius > player1.y &&
-    ball.y - ball.radius < player1.y + playerHeight
-  ) {
-    ball.speedX *= -1;
-    ball.x = player1.x + playerWidth + ball.radius;
-  }
-
-  if (
-    ball.x + ball.radius > player2.x &&
-    ball.x < player2.x + playerWidth &&
-    ball.y + ball.radius > player2.y &&
-    ball.y - ball.radius < player2.y + playerHeight
-  ) {
-    ball.speedX *= -1;
-    ball.x = player2.x - ball.radius;
-  }
-}
-
+// Desenha o campo de futebol
 function drawField() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawCrowd();
+  // Fundo verde do campo
+  ctx.fillStyle = '#0a7d0a';
+  ctx.fillRect(0, 100, canvas.width, canvas.height - 200);
 
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 6;
-  ctx.setLineDash([15, 15]);
+  // Linhas brancas do campo
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 3;
+
+  // Linha do meio
   ctx.beginPath();
-  ctx.moveTo(canvas.width / 2, 0);
-  ctx.lineTo(canvas.width / 2, canvas.height);
+  ctx.moveTo(canvas.width / 2, 100);
+  ctx.lineTo(canvas.width / 2, canvas.height - 100);
   ctx.stroke();
-  ctx.setLineDash([]);
 
+  // Círculo do meio campo
   ctx.beginPath();
   ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
   ctx.stroke();
 
-  drawGoals();
+  // Área do gol esquerda
+  ctx.strokeRect(0, canvas.height / 2 - 80, 100, 160);
 
-  ctx.fillStyle = "white";
-  ctx.font = "36px Arial";
-  ctx.fillText(score1, canvas.width / 4, 50);
-  ctx.fillText(score2, (canvas.width * 3) / 4, 50);
+  // Área do gol direita
+  ctx.strokeRect(canvas.width - 100, canvas.height / 2 - 80, 100, 160);
 }
 
-function drawCrowd() {
-  for (let fan of torcida) {
-    let offset = Math.sin(Date.now() / 200 + fan.offset) * 2 * fan.direction;
-    ctx.fillStyle = fan.color;
-    ctx.fillRect(fan.x, fan.y + offset, 6, 6);
-    ctx.fillStyle = fan.stripe;
-    ctx.fillRect(fan.x + 2, fan.y + offset + 1, 2, 4);
+// Desenha arquibancada cinza na parte superior (faixa)
+function drawUpperStands() {
+  ctx.fillStyle = '#555'; // cinza escuro
+  ctx.fillRect(0, 0, canvas.width, 100);
+}
+
+// Desenha torcedores pixelizados (lado esquerdo)
+function drawFansLeft() {
+  const startX = 10;
+  const startY = 120;
+  const fanSize = 18;
+  const rows = 6;
+  const cols = 3;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = startX + c * (fanSize + 4);
+      const y = startY + r * (fanSize + 6);
+      drawFan(x, y, fanSize);
+    }
   }
 }
 
-function drawGoals() {
-  const goalTop = canvas.height / 4;
-  const goalHeight = canvas.height / 2;
+// Desenha torcedores pixelizados (lado direito)
+function drawFansRight() {
+  const startX = canvas.width - 3 * 22 - 10;
+  const startY = 120;
+  const fanSize = 18;
+  const rows = 6;
+  const cols = 3;
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(20, goalTop, 10, goalHeight);
-  ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
-
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= goalHeight; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(0, goalTop + i);
-    ctx.lineTo(20, goalTop + i);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width, goalTop + i);
-    ctx.lineTo(canvas.width - 20, goalTop + i);
-    ctx.stroke();
-  }
-
-  for (let i = 0; i <= 20; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(i, goalTop);
-    ctx.lineTo(i, goalTop + goalHeight);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - i, goalTop);
-    ctx.lineTo(canvas.width - i, goalTop + goalHeight);
-    ctx.stroke();
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = startX + c * (fanSize + 4);
+      const y = startY + r * (fanSize + 6);
+      drawFan(x, y, fanSize);
+    }
   }
 }
 
+// Função que desenha um torcedor pixelizado (estilo retrô)
+function drawFan(x, y, size) {
+  // Cabeça
+  ctx.fillStyle = '#f4c27a'; // cor pele clara
+  ctx.fillRect(x + size * 0.3, y, size * 0.4, size * 0.4);
+
+  // Corpo
+  ctx.fillStyle = '#0033cc'; // camisa azul
+  ctx.fillRect(x + size * 0.2, y + size * 0.4, size * 0.6, size * 0.6);
+
+  // Olho (preto)
+  ctx.fillStyle = 'black';
+  ctx.fillRect(x + size * 0.4, y + size * 0.1, size * 0.1, size * 0.1);
+}
+
+// Exemplos simples de jogadores e bola
+const player1 = { x: 100, y: canvas.height / 2, width: 40, height: 70, color: 'red' };
+const player2 = { x: 660, y: canvas.height / 2, width: 40, height: 70, color: 'blue' };
+const ball = { x: canvas.width / 2, y: canvas.height / 2, radius: 12, color: 'white' };
+
+function drawPlayers() {
+  // Jogador 1
+  ctx.fillStyle = player1.color;
+  ctx.fillRect(player1.x, player1.y - player1.height / 2, player1.width, player1.height);
+
+  // Jogador 2
+  ctx.fillStyle = player2.color;
+  ctx.fillRect(player2.x, player2.y - player2.height / 2, player2.width, player2.height);
+}
+
+function drawBall() {
+  ctx.beginPath();
+  ctx.fillStyle = ball.color;
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Função principal que desenha tudo
 function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawUpperStands();
   drawField();
-  ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
-  ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
+  drawFansLeft();
+  drawFansRight();
 
-  ctx.save();
-  ctx.translate(ball.x, ball.y);
-  ctx.rotate(ball.angle);
-  ctx.drawImage(ball.img, -ball.radius, -ball.radius, ball.radius * 2, ball.radius * 2);
-  ctx.restore();
+  drawPlayers();
+  drawBall();
 }
 
+// Loop do jogo para desenhar a 60 fps
 function gameLoop() {
-  if (!paused) {
-    movePlayers();
-    moveBall();
-    draw();
-    requestAnimationFrame(gameLoop);
-  }
+  draw();
+  requestAnimationFrame(gameLoop);
 }
 
-function showRestartScreen(winner) {
-  paused = true;
-  document.getElementById("winnerText").textContent = winner;
-  document.getElementById("scoreText").textContent = `Placar final: ${score1} x ${score2}`;
-  document.getElementById("restartScreen").style.display = "flex";
-}
-
-function restartGame() {
-  score1 = 0;
-  score2 = 0;
-  paused = false;
-  document.getElementById("restartScreen").style.display = "none";
-  ball.reset();
-  gameLoop();
-}
-
-ball.img.onload = () => {
-  ball.reset();
-  gameLoop();
-};
-
-setInterval(() => {
-  if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
-    ball.speedX *= 1.05;
-    ball.speedY *= 1.05;
-  }
-}, 2000);
+gameLoop();
