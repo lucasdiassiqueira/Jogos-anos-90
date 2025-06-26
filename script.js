@@ -26,8 +26,8 @@ const ball = {
   radius: 15,
   speedX: 0,
   speedY: 0,
-  angle: 0, // ângulo de rotação
-  rotationSpeed: 0.2, // velocidade de rotação
+  angle: 0, 
+  rotationSpeed: 0.2, 
   img: new Image(),
   reset() {
     this.x = canvas.width / 2;
@@ -37,7 +37,7 @@ const ball = {
     const speed = 4 + (score1 + score2) * 0.5;
     this.speedX = speed * dirX;
     this.speedY = speed * dirY;
-    this.angle = 0; // reseta rotação
+    this.angle = 0;
   }
 };
 ball.img.src = 'bola.png';
@@ -61,7 +61,7 @@ function moveBall() {
   ball.x += ball.speedX;
   ball.y += ball.speedY;
 
-  // rotação contínua da bola
+  
   ball.angle += ball.rotationSpeed;
 
   if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
@@ -71,7 +71,7 @@ function moveBall() {
   const goalTop = canvas.height / 4;
   const goalBottom = canvas.height * 3 / 4;
 
-  // Gol do jogador 2
+  
   if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
     score2++;
     if (score2 >= 5) {
@@ -82,7 +82,7 @@ function moveBall() {
     return;
   }
 
-  // Gol do jogador 1
+
   if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
     score1++;
     if (score1 >= 5) {
@@ -93,12 +93,12 @@ function moveBall() {
     return;
   }
 
-  // Rebote nas laterais (fora do gol)
+ 
   if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
     ball.speedX *= -1;
   }
 
-  // Colisão com jogador 1
+  
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
     ball.x > player1.x &&
@@ -109,7 +109,7 @@ function moveBall() {
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
-  // Colisão com jogador 2
+  
   if (
     ball.x + ball.radius > player2.x &&
     ball.x < player2.x + playerWidth &&
@@ -185,7 +185,7 @@ function draw() {
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
 
-  // desenha a bola com rotação
+  
   ctx.save();
   ctx.translate(ball.x, ball.y);
   ctx.rotate(ball.angle);
@@ -205,7 +205,7 @@ function gameLoop() {
 function showRestartScreen(winner) {
   paused = true;
   document.getElementById("winnerText").textContent = winner;
-  document.getElementById("scoreText").textContent = Placar final: ${score1} x ${score2};
+  document.getElementById("scoreText").textContent = `Placar final: ${score1} x ${score2}`;
   document.getElementById("restartScreen").style.display = "flex";
 }
 
@@ -223,7 +223,7 @@ ball.img.onload = () => {
   gameLoop();
 };
 
-// Aumenta velocidade a cada 2 segundos
+
 setInterval(() => {
   if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
     ball.speedX *= 1.05;
