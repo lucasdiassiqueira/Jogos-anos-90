@@ -26,8 +26,8 @@ const ball = {
   radius: 15,
   speedX: 0,
   speedY: 0,
-  angle: 0, 
-  rotationSpeed: 0.2, 
+  angle: 0,
+  rotationSpeed: 0.2,
   img: new Image(),
   reset() {
     this.x = canvas.width / 2;
@@ -60,8 +60,6 @@ function movePlayers() {
 function moveBall() {
   ball.x += ball.speedX;
   ball.y += ball.speedY;
-
-  
   ball.angle += ball.rotationSpeed;
 
   if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
@@ -71,7 +69,6 @@ function moveBall() {
   const goalTop = canvas.height / 4;
   const goalBottom = canvas.height * 3 / 4;
 
-  
   if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
     score2++;
     if (score2 >= 5) {
@@ -81,7 +78,6 @@ function moveBall() {
     }
     return;
   }
-
 
   if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
     score1++;
@@ -93,12 +89,10 @@ function moveBall() {
     return;
   }
 
- 
   if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
     ball.speedX *= -1;
   }
 
-  
   if (
     ball.x - ball.radius < player1.x + playerWidth &&
     ball.x > player1.x &&
@@ -109,7 +103,6 @@ function moveBall() {
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
-  
   if (
     ball.x + ball.radius > player2.x &&
     ball.x < player2.x + playerWidth &&
@@ -121,8 +114,62 @@ function moveBall() {
   }
 }
 
+let crowdOffset = 0;
+let crowdDirection = 1;
+
+function drawPixelFan(x, y, color1, color2, jumping) {
+  const size = 4;
+  const jump = jumping ? -2 : 0;
+
+  // cabeça
+  ctx.fillStyle = color1;
+  ctx.fillRect(x, y + jump, size, size);
+
+  // corpo
+  ctx.fillStyle = color2;
+  ctx.fillRect(x, y + size + jump, size, size * 2);
+
+  // pernas
+  ctx.fillStyle = color1;
+  ctx.fillRect(x - 1, y + size * 3 + jump, size, size);
+  ctx.fillRect(x + 2, y + size * 3 + jump, size, size);
+
+  // braços
+  ctx.fillRect(x - 2, y + size + jump, size, size);
+  ctx.fillRect(x + 4, y + size + jump, size, size);
+}
+
+function drawCrowd() {
+  const cols = Math.floor(canvas.width / 12);
+  const rows = 2;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = c * 12 + 5;
+      const y = r * 20 + 10;
+      const jump = (c + crowdOffset) % 2 === 0;
+      drawPixelFan(x, y, '#d40000', '#ffffff', jump); // vermelho e branco
+    }
+  }
+
+  // laterais
+  const sideRows = Math.floor(canvas.height / 20);
+  for (let r = 0; r < sideRows; r++) {
+    const y = r * 20 + 10;
+    const jump = (r + crowdOffset) % 2 === 0;
+
+    drawPixelFan(5, y, '#d40000', '#ffffff', jump);
+    drawPixelFan(canvas.width - 15, y, '#d40000', '#ffffff', jump);
+  }
+
+  // animação de pulo
+  crowdOffset += crowdDirection;
+  if (crowdOffset >= 2 || crowdOffset <= 0) crowdDirection *= -1;
+}
+
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawCrowd();
 
   ctx.strokeStyle = "white";
   ctx.lineWidth = 6;
@@ -185,7 +232,6 @@ function draw() {
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
 
-  
   ctx.save();
   ctx.translate(ball.x, ball.y);
   ctx.rotate(ball.angle);
@@ -222,7 +268,6 @@ ball.img.onload = () => {
   ball.reset();
   gameLoop();
 };
-
 
 setInterval(() => {
   if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
