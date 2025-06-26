@@ -50,14 +50,30 @@ let paused = false;
 // Torcida
 const torcida = [];
 const cols = 40;
-const rows = 5;
+const rows = 3; // menos linhas para arquibancadas
 
+// Torcida acima do campo
 for (let y = 0; y < rows; y++) {
   for (let x = 0; x < cols; x++) {
     if (Math.random() < 0.15) continue;
     torcida.push({
       x: x * 20 + 10,
-      y: y * 20 + 10,
+      y: y * 20 + 10 - 60, // acima do campo
+      color: Math.random() > 0.5 ? 'red' : 'white',
+      stripe: Math.random() > 0.5 ? 'black' : 'blue',
+      offset: Math.random() * 5,
+      direction: Math.random() > 0.5 ? 1 : -1
+    });
+  }
+}
+
+// Torcida abaixo do campo
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    if (Math.random() < 0.15) continue;
+    torcida.push({
+      x: x * 20 + 10,
+      y: canvas.height - (rows - y) * 20 + 10 + 60, // abaixo do campo
       color: Math.random() > 0.5 ? 'red' : 'white',
       stripe: Math.random() > 0.5 ? 'black' : 'blue',
       offset: Math.random() * 5,
