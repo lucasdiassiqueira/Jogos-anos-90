@@ -121,61 +121,56 @@ function drawPixelFan(x, y, color1, color2, jumping) {
   const size = 4;
   const jump = jumping ? -2 : 0;
 
-  // cabeça
   ctx.fillStyle = color1;
   ctx.fillRect(x, y + jump, size, size);
 
-  // corpo
   ctx.fillStyle = color2;
   ctx.fillRect(x, y + size + jump, size, size * 2);
 
-  // pernas
   ctx.fillStyle = color1;
   ctx.fillRect(x - 1, y + size * 3 + jump, size, size);
   ctx.fillRect(x + 2, y + size * 3 + jump, size, size);
 
-  // braços
   ctx.fillRect(x - 2, y + size + jump, size, size);
   ctx.fillRect(x + 4, y + size + jump, size, size);
 }
 
 function drawCrowd() {
-  const spacingX = 12;
-  const spacingY = 20;
+  const spacingX = 14;
+  const spacingY = 24;
+  const margin = 24;
 
-  // TOPO - fora do campo
-  const colsTop = Math.floor(canvas.width / spacingX);
+  const crowdLeftX = margin - 14;
+  const crowdRightX = canvas.width - margin + 4;
+  const crowdTopY = margin - 20;
+  const crowdBottomY = canvas.height - margin + 4;
+
+  const colsTop = Math.floor((canvas.width - margin * 2) / spacingX);
   for (let c = 0; c < colsTop; c++) {
-    const x = c * spacingX + 5;
-    const y = -5; // fora do campo
+    const x = margin + c * spacingX;
     const jump = (c + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
+    drawPixelFan(x, crowdTopY, '#d40000', '#ffffff', jump);
   }
 
-  // BASE - fora do campo
   for (let c = 0; c < colsTop; c++) {
-    const x = c * spacingX + 5;
-    const y = canvas.height + 5; // fora do campo abaixo
+    const x = margin + c * spacingX;
     const jump = (c + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
+    drawPixelFan(x, crowdBottomY, '#d40000', '#ffffff', jump);
   }
 
-  // LATERAL ESQUERDA - fora do campo
-  const rowsSide = Math.floor(canvas.height / spacingY);
+  const rowsSide = Math.floor((canvas.height - margin * 2) / spacingY);
   for (let r = 0; r < rowsSide; r++) {
-    const y = r * spacingY + 10;
+    const y = margin + r * spacingY;
     const jump = (r + crowdOffset) % 2 === 0;
-    drawPixelFan(-8, y, '#d40000', '#ffffff', jump); // esquerda
+    drawPixelFan(crowdLeftX, y, '#d40000', '#ffffff', jump);
   }
 
-  // LATERAL DIREITA - fora do campo
   for (let r = 0; r < rowsSide; r++) {
-    const y = r * spacingY + 10;
+    const y = margin + r * spacingY;
     const jump = (r + crowdOffset) % 2 === 0;
-    drawPixelFan(canvas.width + 5, y, '#d40000', '#ffffff', jump); // direita
+    drawPixelFan(crowdRightX, y, '#d40000', '#ffffff', jump);
   }
 
-  // animação de pulo
   crowdOffset += crowdDirection;
   if (crowdOffset >= 2 || crowdOffset <= 0) crowdDirection *= -1;
 }
