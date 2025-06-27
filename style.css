@@ -112,9 +112,23 @@ canvas {
 }
 
 .fan {
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   background-image: url('torcedor.png'); /* Substitua pelo caminho correto da imagem */
   background-size: cover;
   image-rendering: pixelated;
+}
+
+@keyframes pular {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.fan {
+  animation: pular 0.5s infinite;
+  animation-delay: calc(0.05s * var(--i));
 }

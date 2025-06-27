@@ -108,17 +108,35 @@ function moveBall() {
     height: canvas.height / 2
   };
 
-  if (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
-      ball.y > goalLeft.y && ball.y < goalLeft.y + goalLeft.height) {
+  const isLeftGoal = ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
+                     ball.y > goalLeft.y + 10 &&
+                     ball.y < goalLeft.y + goalLeft.height - 10;
+
+  const isRightGoal = ball.x + ball.radius >= goalRight.x &&
+                      ball.y > goalRight.y + 10 &&
+                      ball.y < goalRight.y + goalRight.height - 10;
+
+  if (isLeftGoal) {
     score2++;
     score2 >= 5 ? showRestartScreen("Jogador 2 venceu!") : ball.reset();
     return;
   }
-  if (ball.x + ball.radius >= goalRight.x &&
-      ball.y > goalRight.y && ball.y < goalRight.y + goalRight.height) {
+
+  if (isRightGoal) {
     score1++;
     score1 >= 5 ? showRestartScreen("Jogador 1 venceu!") : ball.reset();
     return;
+  }
+
+  // Ricochetear se bater na lateral do gol
+  const bateLateralDoGol =
+    (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
+     (ball.y <= goalLeft.y + 10 || ball.y >= goalLeft.y + goalLeft.height - 10)) ||
+    (ball.x + ball.radius >= goalRight.x &&
+     (ball.y <= goalRight.y + 10 || ball.y >= goalRight.y + goalRight.height - 10));
+
+  if (bateLateralDoGol) {
+    ball.speedX *= -1;
   }
 
   // Colisão com os jogadores
@@ -139,71 +157,8 @@ function moveBall() {
   }
 }
 
-// Variáveis para animação torcida
-let crowdOffset = 0;
-let crowdDirection = 1;
-
-// Função para desenhar um torcedor pixelizado (quadradinhos)
-function drawPixelFan(x, y, color1, color2, jumping) {
-  const size = 4;
-  const jump = jumping ? -2 : 0;
-  ctx.fillStyle = color1;
-  ctx.fillRect(x, y + jump, size, size);
-  ctx.fillStyle = color2;
-  ctx.fillRect(x, y + size + jump, size, size * 2);
-  ctx.fillStyle = color1;
-  ctx.fillRect(x - 1, y + size * 3 + jump, size, size);
-  ctx.fillRect(x + 2, y + size * 3 + jump, size, size);
-  ctx.fillRect(x - 2, y + size + jump, size, size);
-  ctx.fillRect(x + 4, y + size + jump, size, size);
-}
-
-// Função para desenhar a torcida nas bordas externas do campo
-function drawCrowd() {
-  const spacingX = 14;
-  const spacingY = 24;
-
-  // Torcida no topo - desenhada *acima* do campo (fora)
-  const colsTop = Math.floor(canvas.width / spacingX);
-  for (let c = 0; c < colsTop; c++) {
-    const x = c * spacingX + 6;
-    const y = -20; // posição fora do canvas, para parecer fora do campo
-    const jump = (c + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
-  }
-
-  // Torcida na base - desenhada *abaixo* do campo (fora)
-  for (let c = 0; c < colsTop; c++) {
-    const x = c * spacingX + 6;
-    const y = canvas.height + 6; // posição logo abaixo do campo
-    const jump = (c + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
-  }
-
-  // Torcida à esquerda - desenhada *à esquerda* do campo (fora)
-  const rowsSide = Math.floor(canvas.height / spacingY);
-  for (let r = 0; r < rowsSide; r++) {
-    const y = r * spacingY + 12;
-    const x = -20; // fora do campo, à esquerda
-    const jump = (r + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
-  }
-
-  // Torcida à direita - desenhada *à direita* do campo (fora)
-  for (let r = 0; r < rowsSide; r++) {
-    const y = r * spacingY + 12;
-    const x = canvas.width + 6; // fora do campo, à direita
-    const jump = (r + crowdOffset) % 2 === 0;
-    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
-  }
-
-  crowdOffset += crowdDirection;
-  if (crowdOffset >= 2 || crowdOffset <= 0) crowdDirection *= -1;
-}
-
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawCrowd();
 
   ctx.strokeStyle = "white";
   ctx.lineWidth = 10;
@@ -307,15 +262,18 @@ setInterval(() => {
     ball.speedY *= 1.05;
   }
 }, 2000);
- function gerarTorcedores() {
+
+// GERAR TORCEDORES
+function gerarTorcedores() {
   const lados = ['top', 'bottom', 'left', 'right'];
   lados.forEach(lado => {
     const container = document.querySelector('.crowd.' + lado);
-    const quantidade = lado === 'left' || lado === 'right' ? 12 : 30;
+    const quantidade = lado === 'left' || lado === 'right' ? 40 : 80;
 
     for (let i = 0; i < quantidade; i++) {
       const fan = document.createElement('div');
       fan.classList.add('fan');
+      fan.style.setProperty('--i', i); // para animar com delay
       container.appendChild(fan);
     }
   });
