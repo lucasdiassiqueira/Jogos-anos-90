@@ -93,39 +93,47 @@ function moveBall() {
     ball.speedY *= -1;
   }
 
-  const goalLeft = { x: 0, y: canvas.height / 4, width: 10, height: canvas.height / 2 };
-  const goalRight = { x: canvas.width - 10, y: canvas.height / 4, width: 10, height: canvas.height / 2 };
+  const goalTop = canvas.height / 4;
+  const goalBottom = goalTop + canvas.height / 2;
+  const goalLeftX = 20;
+  const goalRightX = canvas.width - 30;
 
-  const isLeftGoal = ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
-                     ball.y > goalLeft.y + 10 &&
-                     ball.y < goalLeft.y + goalLeft.height - 10;
+  const isInsideLeftGoal = (
+    ball.x - ball.radius <= goalLeftX &&
+    ball.y > goalTop + 10 &&
+    ball.y < goalBottom - 10
+  );
 
-  const isRightGoal = ball.x + ball.radius >= goalRight.x &&
-                      ball.y > goalRight.y + 10 &&
-                      ball.y < goalRight.y + goalRight.height - 10;
+  const isInsideRightGoal = (
+    ball.x + ball.radius >= goalRightX + 10 &&
+    ball.y > goalTop + 10 &&
+    ball.y < goalBottom - 10
+  );
 
-  if (isLeftGoal) {
+  if (isInsideLeftGoal) {
     score2++;
     score2 >= 5 ? showRestartScreen("Jogador 2 venceu!") : ball.reset();
     return;
   }
 
-  if (isRightGoal) {
+  if (isInsideRightGoal) {
     score1++;
     score1 >= 5 ? showRestartScreen("Jogador 1 venceu!") : ball.reset();
     return;
   }
 
-  const bateLateralDoGol =
-    (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
-     (ball.y <= goalLeft.y + 10 || ball.y >= goalLeft.y + goalLeft.height - 10)) ||
-    (ball.x + ball.radius >= goalRight.x &&
-     (ball.y <= goalRight.y + 10 || ball.y >= goalRight.y + goalRight.height - 10));
+  // Ricocheteia se bater na parte de trás do gol (fora da área válida de gol)
+  const bateAtrasDoGol =
+    (ball.x - ball.radius < goalLeftX &&
+     (ball.y <= goalTop + 10 || ball.y >= goalBottom - 10)) ||
+    (ball.x + ball.radius > goalRightX + 10 &&
+     (ball.y <= goalTop + 10 || ball.y >= goalBottom - 10));
 
-  if (bateLateralDoGol) {
+  if (bateAtrasDoGol) {
     ball.speedX *= -1;
   }
 
+  // Colisão com jogadores
   if (ball.x - ball.radius < player1.x + playerWidth &&
       ball.x > player1.x &&
       ball.y + ball.radius > player1.y &&
@@ -142,6 +150,7 @@ function moveBall() {
     ball.x = player2.x - ball.radius;
   }
 }
+
 
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
