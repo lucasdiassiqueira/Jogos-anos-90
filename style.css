@@ -20,11 +20,49 @@ body {
 }
 
 canvas {
-  background-color: #0a8a0a;
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #0a8a0a,
+      #0a8a0a 40px,
+      #0f9f0f 40px,
+      #0f9f0f 80px
+    );
   border: 6px solid #ffffff;
   box-shadow: 0 0 20px black;
   display: block;
   z-index: 2;
+}
+
+/* Círculo central e linha do meio campo */
+canvas::before,
+canvas::after {
+  content: "";
+  position: absolute;
+  background: white;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Linha do meio campo */
+canvas::before {
+  width: 4px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+/* Círculo central */
+canvas::after {
+  width: 120px;
+  height: 120px;
+  border: 3px solid white;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Tela de reinício após o jogo */
