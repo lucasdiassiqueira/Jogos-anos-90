@@ -1,3 +1,4 @@
+// Seleciona o canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -8,17 +9,20 @@ const player1 = {
   x: 20,
   y: canvas.height / 2 - playerHeight / 2,
   speed: 5,
-  img: new Image()
+  img: null
 };
-player1.img.src = 'jogador (2).png';
 
 const player2 = {
   x: canvas.width - 20 - playerWidth,
   y: canvas.height / 2 - playerHeight / 2,
   speed: 5,
-  img: new Image()
+  img: null
 };
-player2.img.src = 'jogador2.png';
+
+let score1 = 0;
+let score2 = 0;
+let keys = {};
+let paused = false;
 
 const ball = {
   x: canvas.width / 2,
@@ -40,12 +44,37 @@ const ball = {
     this.angle = 0;
   }
 };
-ball.img.src = 'bola.png';
 
-let score1 = 0;
-let score2 = 0;
-let keys = {};
-let paused = false;
+// Carregamento de imagens
+const player1Img = new Image();
+const player2Img = new Image();
+const ballImg = new Image();
+
+let imagesLoaded = 0;
+const totalImages = 3;
+
+function checkAllLoaded() {
+  imagesLoaded++;
+  if (imagesLoaded === totalImages) {
+    startGame();
+  }
+}
+
+player1Img.src = 'jogador (2).png';
+player2Img.src = 'jogador2.png';
+ballImg.src = 'bola.png';
+
+player1Img.onload = checkAllLoaded;
+player2Img.onload = checkAllLoaded;
+ballImg.onload = checkAllLoaded;
+
+function startGame() {
+  player1.img = player1Img;
+  player2.img = player2Img;
+  ball.img = ballImg;
+  ball.reset();
+  gameLoop();
+}
 
 document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
 document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
@@ -66,49 +95,45 @@ function moveBall() {
     ball.speedY *= -1;
   }
 
-  const goalTop = canvas.height / 4;
-  const goalBottom = canvas.height * 3 / 4;
+  const goalLeft = {
+    x: 0,
+    y: canvas.height / 4,
+    width: 10,
+    height: canvas.height / 2
+  };
+  const goalRight = {
+    x: canvas.width - 10,
+    y: canvas.height / 4,
+    width: 10,
+    height: canvas.height / 2
+  };
 
-  if (ball.x - ball.radius <= 0 && ball.y > goalTop && ball.y < goalBottom) {
+  if (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
+      ball.y > goalLeft.y && ball.y < goalLeft.y + goalLeft.height) {
     score2++;
-    if (score2 >= 5) {
-      showRestartScreen("Jogador 2 venceu!");
-    } else {
-      ball.reset();
-    }
+    score2 >= 5 ? showRestartScreen("Jogador 2 venceu!") : ball.reset();
     return;
   }
-
-  if (ball.x + ball.radius >= canvas.width && ball.y > goalTop && ball.y < goalBottom) {
+  if (ball.x + ball.radius >= goalRight.x &&
+      ball.y > goalRight.y && ball.y < goalRight.y + goalRight.height) {
     score1++;
-    if (score1 >= 5) {
-      showRestartScreen("Jogador 1 venceu!");
-    } else {
-      ball.reset();
-    }
+    score1 >= 5 ? showRestartScreen("Jogador 1 venceu!") : ball.reset();
     return;
   }
 
-  if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
-    ball.speedX *= -1;
-  }
-
-  if (
-    ball.x - ball.radius < player1.x + playerWidth &&
-    ball.x > player1.x &&
-    ball.y + ball.radius > player1.y &&
-    ball.y - ball.radius < player1.y + playerHeight
-  ) {
+  // Colisão com os jogadores
+  if (ball.x - ball.radius < player1.x + playerWidth &&
+      ball.x > player1.x &&
+      ball.y + ball.radius > player1.y &&
+      ball.y - ball.radius < player1.y + playerHeight) {
     ball.speedX *= -1;
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
-  if (
-    ball.x + ball.radius > player2.x &&
-    ball.x < player2.x + playerWidth &&
-    ball.y + ball.radius > player2.y &&
-    ball.y - ball.radius < player2.y + playerHeight
-  ) {
+  if (ball.x + ball.radius > player2.x &&
+      ball.x < player2.x + playerWidth &&
+      ball.y + ball.radius > player2.y &&
+      ball.y - ball.radius < player2.y + playerHeight) {
     ball.speedX *= -1;
     ball.x = player2.x - ball.radius;
   }
@@ -120,17 +145,13 @@ let crowdDirection = 1;
 function drawPixelFan(x, y, color1, color2, jumping) {
   const size = 4;
   const jump = jumping ? -2 : 0;
-
   ctx.fillStyle = color1;
   ctx.fillRect(x, y + jump, size, size);
-
   ctx.fillStyle = color2;
   ctx.fillRect(x, y + size + jump, size, size * 2);
-
   ctx.fillStyle = color1;
   ctx.fillRect(x - 1, y + size * 3 + jump, size, size);
   ctx.fillRect(x + 2, y + size * 3 + jump, size, size);
-
   ctx.fillRect(x - 2, y + size + jump, size, size);
   ctx.fillRect(x + 4, y + size + jump, size, size);
 }
@@ -138,23 +159,16 @@ function drawPixelFan(x, y, color1, color2, jumping) {
 function drawCrowd() {
   const spacingX = 14;
   const spacingY = 24;
-  const margin = 24;
-
-  const crowdLeftX = -16; // fora do campo à esquerda
-  const crowdRightX = canvas.width + 6; // fora do campo à direita
-  const crowdTopY = -16; // fora do campo acima
-  const crowdBottomY = canvas.height + 6; // fora do campo abaixo
+  const crowdLeftX = -16;
+  const crowdRightX = canvas.width + 6;
+  const crowdTopY = -16;
+  const crowdBottomY = canvas.height + 6;
 
   const colsTop = Math.floor(canvas.width / spacingX);
   for (let c = 0; c < colsTop; c++) {
     const x = c * spacingX + 6;
     const jump = (c + crowdOffset) % 2 === 0;
     drawPixelFan(x, crowdTopY, '#d40000', '#ffffff', jump);
-  }
-
-  for (let c = 0; c < colsTop; c++) {
-    const x = c * spacingX + 6;
-    const jump = (c + crowdOffset) % 2 === 0;
     drawPixelFan(x, crowdBottomY, '#d40000', '#ffffff', jump);
   }
 
@@ -175,8 +189,8 @@ function drawField() {
   drawCrowd();
 
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 6;
-  ctx.setLineDash([15, 15]);
+  ctx.lineWidth = 10;
+  ctx.setLineDash([20, 20]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
@@ -184,7 +198,8 @@ function drawField() {
   ctx.setLineDash([]);
 
   ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
+  ctx.lineWidth = 10;
+  ctx.arc(canvas.width / 2, canvas.height / 2, 80, 0, Math.PI * 2);
   ctx.stroke();
 
   drawGoals();
@@ -198,11 +213,9 @@ function drawField() {
 function drawGoals() {
   const goalTop = canvas.height / 4;
   const goalHeight = canvas.height / 2;
-
   ctx.fillStyle = "white";
   ctx.fillRect(20, goalTop, 10, goalHeight);
   ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
-
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   for (let i = 0; i <= goalHeight; i += 10) {
@@ -216,7 +229,6 @@ function drawGoals() {
     ctx.lineTo(canvas.width - 20, goalTop + i);
     ctx.stroke();
   }
-
   for (let i = 0; i <= 20; i += 10) {
     ctx.beginPath();
     ctx.moveTo(i, goalTop);

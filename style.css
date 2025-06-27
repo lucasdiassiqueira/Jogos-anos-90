@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #444;
+  background: #444; /* cinza escuro do fundo */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,11 +9,12 @@ body {
 
 .stadium {
   position: relative;
-  padding: 30px;
-  background-color: #222;
+  background-color: #aaa; /* cinza claro (arquibancada) */
+  padding: 40px; /* espaço para os torcedores */
   border-radius: 10px;
 }
 
+/* Canvas = campo */
 canvas {
   background-color: #0a8a0a; /* verde campo */
   display: block;
@@ -26,8 +27,8 @@ canvas {
   position: absolute;
   width: 800px;
   height: 500px;
-  top: 30px;
-  left: 30px;
+  top: 40px;
+  left: 40px;
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
   display: none;
@@ -61,4 +62,58 @@ canvas {
 
 #restartScreen button:hover {
   background-color: #ddd;
+}
+
+/* Torcedores */
+.crowd {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  z-index: 5;
+}
+
+.crowd.top {
+  top: 0;
+  left: 40px;
+  width: 800px;
+  height: 40px;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+
+.crowd.bottom {
+  bottom: 0;
+  left: 40px;
+  width: 800px;
+  height: 40px;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+.crowd.left {
+  top: 40px;
+  left: 0;
+  width: 40px;
+  height: 500px;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+
+.crowd.right {
+  top: 40px;
+  right: 0;
+  width: 40px;
+  height: 500px;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+.fan {
+  width: 16px;
+  height: 16px;
+  background-image: url('torcedor_pixelizado.png'); /* Substitua pelo caminho correto da imagem */
+  background-size: cover;
+  image-rendering: pixelated;
 }
