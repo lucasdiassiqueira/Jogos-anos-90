@@ -220,34 +220,23 @@ function drawField() {
 function drawGoals() {
   const goalTop = canvas.height / 4;
   const goalHeight = canvas.height / 2;
+  const goalWidth = 10;
+  const innerBar = 6;
+
+  // Traves verticais e travessão (com espessura maior)
   ctx.fillStyle = "white";
-  ctx.fillRect(20, goalTop, 10, goalHeight);
-  ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= goalHeight; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(0, goalTop + i);
-    ctx.lineTo(20, goalTop + i);
-    ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(canvas.width, goalTop + i);
-    ctx.lineTo(canvas.width - 20, goalTop + i);
-    ctx.stroke();
-  }
-  for (let i = 0; i <= 20; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(i, goalTop);
-    ctx.lineTo(i, goalTop + goalHeight);
-    ctx.stroke();
+  // Gol esquerdo
+  ctx.fillRect(20, goalTop, goalWidth, goalHeight); // trave direita do gol esquerdo
+  ctx.fillRect(10, goalTop, goalWidth, goalHeight); // nova trave esquerda
+  ctx.fillRect(10, goalTop, goalWidth + innerBar, innerBar); // travessão
 
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - i, goalTop);
-    ctx.lineTo(canvas.width - i, goalTop + goalHeight);
-    ctx.stroke();
-  }
+  // Gol direito
+  ctx.fillRect(canvas.width - 30, goalTop, goalWidth, goalHeight); // trave esquerda do gol direito
+  ctx.fillRect(canvas.width - 20, goalTop, goalWidth, goalHeight); // nova trave direita
+  ctx.fillRect(canvas.width - 30, goalTop, goalWidth + innerBar, innerBar); // travessão
 }
+
 
 function draw() {
   drawField();
