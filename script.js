@@ -1,3 +1,4 @@
+// JavaScript completo do jogo
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -94,18 +95,8 @@ function moveBall() {
     ball.speedY *= -1;
   }
 
-  const goalLeft = {
-    x: 0,
-    y: canvas.height / 4,
-    width: 10,
-    height: canvas.height / 2
-  };
-  const goalRight = {
-    x: canvas.width - 10,
-    y: canvas.height / 4,
-    width: 10,
-    height: canvas.height / 2
-  };
+  const goalLeft = { x: 0, y: canvas.height / 4, width: 10, height: canvas.height / 2 };
+  const goalRight = { x: canvas.width - 10, y: canvas.height / 4, width: 10, height: canvas.height / 2 };
 
   const isLeftGoal = ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
                      ball.y > goalLeft.y + 10 &&
@@ -248,11 +239,6 @@ function restartGame() {
   gameLoop();
 }
 
-ball.img.onload = () => {
-  ball.reset();
-  gameLoop();
-};
-
 setInterval(() => {
   if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
     ball.speedX *= 1.05;
@@ -268,8 +254,8 @@ function gerarTorcedores() {
 
   [top, bottom, left, right].forEach(el => el.innerHTML = '');
 
-  const totalTopBottom = 120;
-  const totalLeftRight = 80;
+  const totalTopBottom = 180;
+  const totalLeftRight = 150;
 
   for (let i = 0; i < totalTopBottom; i++) {
     const fanTop = document.createElement('div');

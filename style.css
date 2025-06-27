@@ -15,7 +15,6 @@ body {
   align-items: center;
 }
 
-/* Campo */
 canvas {
   background-color: #0a8a0a;
   border: 6px solid #ffffff;
@@ -24,7 +23,6 @@ canvas {
   z-index: 2;
 }
 
-/* Torcida */
 .crowd {
   position: absolute;
   display: flex;
@@ -44,6 +42,7 @@ canvas {
   top: 0;
   align-items: flex-end;
 }
+
 .crowd.bottom {
   bottom: 0;
   align-items: flex-start;
@@ -62,13 +61,13 @@ canvas {
   left: 0;
   align-items: flex-end;
 }
+
 .crowd.right {
   right: 0;
   align-items: flex-start;
   flex-direction: column-reverse;
 }
 
-/* Torcedor */
 .fan-container {
   position: relative;
   width: 32px;
@@ -77,7 +76,7 @@ canvas {
 }
 
 .fan {
-  width: 100%;
+  width: 32px;
   height: 32px;
   background-image: url('New Piskel.png');
   background-size: contain;
@@ -87,29 +86,44 @@ canvas {
   transform-origin: center;
 }
 
-/* Banco da arquibancada */
-.bench {
-  width: 100%;
-  height: 6px;
-  background-color: #333;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-radius: 2px;
-}
-
-/* Rotação por lado */
 .crowd.left .fan {
+  animation: pular-esquerda 1s infinite ease-in-out;
   transform: rotateY(180deg);
 }
+
 .crowd.right .fan {
+  animation: pular-direita 1s infinite ease-in-out;
   transform: rotateY(0deg);
 }
+
 .crowd.top .fan {
+  animation: pular-cima 1s infinite ease-in-out;
   transform: rotateX(0deg);
 }
+
 .crowd.bottom .fan {
+  animation: pular-baixo 1s infinite ease-in-out;
   transform: rotateX(180deg);
+}
+
+@keyframes pular-esquerda {
+  0%, 100% { transform: rotate(90deg) translateY(0); }
+  50% { transform: rotate(90deg) translateY(-5px); }
+}
+
+@keyframes pular-direita {
+  0%, 100% { transform: rotate(-90deg) translateY(0); }
+  50% { transform: rotate(-90deg) translateY(-5px); }
+}
+
+@keyframes pular-cima {
+  0%, 100% { transform: rotate(180deg) translateY(0); }
+  50% { transform: rotate(180deg) translateY(-5px); }
+}
+
+@keyframes pular-baixo {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(0deg) translateY(-5px); }
 }
 
 @keyframes pular {
@@ -121,7 +135,16 @@ canvas {
   }
 }
 
-/* Tela de reinício */
+.bench {
+  width: 100%;
+  height: 6px;
+  background-color: #333;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+}
+
 #restartScreen {
   position: absolute;
   width: 800px;
