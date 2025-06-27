@@ -261,35 +261,33 @@ setInterval(() => {
 }, 2000);
 
 function gerarTorcedores() {
-  const container = document.querySelector('.stadium');
+  const top = document.querySelector('.crowd.top');
+  const bottom = document.querySelector('.crowd.bottom');
+  const left = document.querySelector('.crowd.left');
+  const right = document.querySelector('.crowd.right');
 
-  const crowdTop = document.querySelector('.crowd.top');
-  const crowdBottom = document.querySelector('.crowd.bottom');
-  const crowdLeft = document.querySelector('.crowd.left');
-  const crowdRight = document.querySelector('.crowd.right');
+  [top, bottom, left, right].forEach(el => el.innerHTML = '');
 
-  [crowdTop, crowdBottom, crowdLeft, crowdRight].forEach(c => c.innerHTML = '');
+  const totalTopBottom = 80;
+  const totalLeftRight = 40;
 
-  const fanCountTop = 50;
-  const fanCountSides = 30;
-
-  for (let i = 0; i < fanCountTop; i++) {
+  for (let i = 0; i < totalTopBottom; i++) {
     const fanTop = document.createElement('div');
     fanTop.className = 'fan';
-    crowdTop.appendChild(fanTop);
+    top.appendChild(fanTop);
 
     const fanBottom = document.createElement('div');
     fanBottom.className = 'fan';
-    crowdBottom.appendChild(fanBottom);
+    bottom.appendChild(fanBottom);
   }
 
-  for (let i = 0; i < fanCountSides; i++) {
+  for (let i = 0; i < totalLeftRight; i++) {
     const fanLeft = document.createElement('div');
     fanLeft.className = 'fan';
-    crowdLeft.appendChild(fanLeft);
+    left.appendChild(fanLeft);
 
     const fanRight = document.createElement('div');
     fanRight.className = 'fan';
-    crowdRight.appendChild(fanRight);
+    right.appendChild(fanRight);
   }
 }
