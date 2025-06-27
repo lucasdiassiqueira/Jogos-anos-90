@@ -146,27 +146,76 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+ 
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 10;
-  ctx.setLineDash([20, 20]);
+  ctx.lineWidth = 4;
+
+  
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
-  ctx.setLineDash([]);
 
+  
   ctx.beginPath();
-  ctx.lineWidth = 10;
-  ctx.arc(canvas.width / 2, canvas.height / 2, 80, 0, Math.PI * 2);
+  ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
   ctx.stroke();
 
-  drawGoals();
+  
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height / 2, 2, 0, Math.PI * 2);
+  ctx.fillStyle = "white";
+  ctx.fill();
 
+  
+  function drawSide(isLeft) {
+    const baseX = isLeft ? 0 : canvas.width;
+    const direction = isLeft ? 1 : -1;
+
+    const goalTop = canvas.height / 2 - 75;
+
+    
+    ctx.strokeRect(baseX + direction * 0, canvas.height / 2 - 110, direction * 110, 220);
+
+    
+    ctx.strokeRect(baseX + direction * 0, canvas.height / 2 - 55, direction * 50, 110);
+
+   
+    ctx.beginPath();
+    ctx.arc(baseX + direction * 80, canvas.height / 2, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(baseX + direction * 80, canvas.height / 2, 44, isLeft ? 1.2 : 1.9, isLeft ? 4.1 : 5.4);
+    ctx.stroke();
+  }
+
+  
+  drawSide(true);  
+  drawSide(false); 
+
+  
+  const cornerRadius = 10;
+  const corners = [
+    { x: 0, y: 0, start: 0, end: Math.PI / 2 },
+    { x: canvas.width, y: 0, start: Math.PI / 2, end: Math.PI },
+    { x: 0, y: canvas.height, start: -Math.PI / 2, end: 0 },
+    { x: canvas.width, y: canvas.height, start: Math.PI, end: 1.5 * Math.PI }
+  ];
+
+  corners.forEach(c => {
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, cornerRadius, c.start, c.end);
+    ctx.stroke();
+  });
+
+  
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
   ctx.fillText(score1, canvas.width / 4, 50);
   ctx.fillText(score2, (canvas.width * 3) / 4, 50);
 }
+
 
 function drawGoals() {
   const goalTop = canvas.height / 4;
