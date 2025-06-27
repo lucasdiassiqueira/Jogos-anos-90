@@ -111,7 +111,6 @@ canvas {
   align-items: flex-start;
 }
 
-
 @keyframes pular {
   0%, 100% {
     transform: translateY(0);
@@ -127,5 +126,5 @@ canvas {
   background-image: url('torcedor.png'); /* use o nome da imagem correta */
   background-size: cover;
   image-rendering: pixelated;
-  animation: jump 1s infinite ease-in-out;
+  animation: pular 1s infinite ease-in-out;
 }

@@ -1,4 +1,3 @@
-// Seleciona o canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -45,7 +44,6 @@ const ball = {
   }
 };
 
-// Carregamento de imagens
 const player1Img = new Image();
 const player2Img = new Image();
 const ballImg = new Image();
@@ -73,6 +71,7 @@ function startGame() {
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
+  gerarTorcedores();
   gameLoop();
 }
 
@@ -128,7 +127,6 @@ function moveBall() {
     return;
   }
 
-  // Ricochetear se bater na lateral do gol
   const bateLateralDoGol =
     (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
      (ball.y <= goalLeft.y + 10 || ball.y >= goalLeft.y + goalLeft.height - 10)) ||
@@ -139,7 +137,6 @@ function moveBall() {
     ball.speedX *= -1;
   }
 
-  // Colisão com os jogadores
   if (ball.x - ball.radius < player1.x + playerWidth &&
       ball.x > player1.x &&
       ball.y + ball.radius > player1.y &&
@@ -271,7 +268,6 @@ function gerarTorcedores() {
   const crowdLeft = document.querySelector('.crowd.left');
   const crowdRight = document.querySelector('.crowd.right');
 
-  // Limpa torcedores antigos se houver
   [crowdTop, crowdBottom, crowdLeft, crowdRight].forEach(c => c.innerHTML = '');
 
   const fanCountTop = 50;
@@ -297,4 +293,3 @@ function gerarTorcedores() {
     crowdRight.appendChild(fanRight);
   }
 }
-
