@@ -111,13 +111,6 @@ canvas {
   align-items: flex-start;
 }
 
-.fan {
-  width: 32px;
-  height: 32px;
-  background-image: url('torcedor.png'); /* Substitua pelo caminho correto da imagem */
-  background-size: cover;
-  image-rendering: pixelated;
-}
 
 @keyframes pular {
   0%, 100% {
@@ -129,6 +122,10 @@ canvas {
 }
 
 .fan {
-  animation: pular 0.5s infinite;
-  animation-delay: calc(0.05s * var(--i));
+  width: 32px;
+  height: 32px;
+  background-image: url('torcedor.png'); /* use o nome da imagem correta */
+  background-size: cover;
+  image-rendering: pixelated;
+  animation: jump 1s infinite ease-in-out;
 }

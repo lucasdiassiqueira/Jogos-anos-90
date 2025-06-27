@@ -263,20 +263,38 @@ setInterval(() => {
   }
 }, 2000);
 
-// GERAR TORCEDORES
 function gerarTorcedores() {
-  const lados = ['top', 'bottom', 'left', 'right'];
-  lados.forEach(lado => {
-    const container = document.querySelector('.crowd.' + lado);
-    const quantidade = lado === 'left' || lado === 'right' ? 40 : 80;
+  const container = document.querySelector('.stadium');
 
-    for (let i = 0; i < quantidade; i++) {
-      const fan = document.createElement('div');
-      fan.classList.add('fan');
-      fan.style.setProperty('--i', i); // para animar com delay
-      container.appendChild(fan);
-    }
-  });
+  const crowdTop = document.querySelector('.crowd.top');
+  const crowdBottom = document.querySelector('.crowd.bottom');
+  const crowdLeft = document.querySelector('.crowd.left');
+  const crowdRight = document.querySelector('.crowd.right');
+
+  // Limpa torcedores antigos se houver
+  [crowdTop, crowdBottom, crowdLeft, crowdRight].forEach(c => c.innerHTML = '');
+
+  const fanCountTop = 50;
+  const fanCountSides = 30;
+
+  for (let i = 0; i < fanCountTop; i++) {
+    const fanTop = document.createElement('div');
+    fanTop.className = 'fan';
+    crowdTop.appendChild(fanTop);
+
+    const fanBottom = document.createElement('div');
+    fanBottom.className = 'fan';
+    crowdBottom.appendChild(fanBottom);
+  }
+
+  for (let i = 0; i < fanCountSides; i++) {
+    const fanLeft = document.createElement('div');
+    fanLeft.className = 'fan';
+    crowdLeft.appendChild(fanLeft);
+
+    const fanRight = document.createElement('div');
+    fanRight.className = 'fan';
+    crowdRight.appendChild(fanRight);
+  }
 }
 
-gerarTorcedores();
