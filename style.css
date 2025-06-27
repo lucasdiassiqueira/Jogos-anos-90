@@ -114,7 +114,7 @@ canvas {
 .fan {
   width: 16px;
   height: 16px;
-  background-image: url('torcedor_pixelizado.png'); /* Substitua pelo caminho correto da imagem */
+  background-image: url('torcedor.png'); /* Substitua pelo caminho correto da imagem */
   background-size: cover;
   image-rendering: pixelated;
 }

@@ -307,3 +307,18 @@ setInterval(() => {
     ball.speedY *= 1.05;
   }
 }, 2000);
+ function gerarTorcedores() {
+  const lados = ['top', 'bottom', 'left', 'right'];
+  lados.forEach(lado => {
+    const container = document.querySelector('.crowd.' + lado);
+    const quantidade = lado === 'left' || lado === 'right' ? 12 : 30;
+
+    for (let i = 0; i < quantidade; i++) {
+      const fan = document.createElement('div');
+      fan.classList.add('fan');
+      container.appendChild(fan);
+    }
+  });
+}
+
+gerarTorcedores();
