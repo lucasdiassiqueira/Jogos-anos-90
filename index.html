@@ -7,46 +7,24 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="stadium">
+ <div class="stadium">
+  <!-- Torcidas -->
+  <div class="crowd top"></div>
+  <div class="crowd bottom"></div>
+  <div class="crowd left"></div>
+  <div class="crowd right"></div>
 
-    <!-- Torcida Top -->
-    <div class="crowd top">
-      <div class="bench-reserve">Bancos de Reserva</div>
-      <div class="fans"></div>
-      <div class="coach-area">Área Técnicos</div>
-    </div>
+  <!-- Áreas especiais -->
+  <div class="trainer-area top">Treinadores / Bancos de Reserva</div>
+  <div class="trainer-area bottom">Treinadores / Bancos de Reserva</div>
+  <div class="ad-space left">Publicidade</div>
+  <div class="ad-space right">Publicidade</div>
 
-    <!-- Torcida Bottom -->
-    <div class="crowd bottom">
-      <div class="coach-area">Área Técnicos</div>
-      <div class="fans"></div>
-      <div class="bench-reserve">Bancos de Reserva</div>
-    </div>
+  <canvas id="gameCanvas" width="800" height="500"></canvas>
 
-    <!-- Torcida Left -->
-    <div class="crowd left">
-      <div class="ad-space">Publicidade</div>
-      <div class="fans"></div>
-    </div>
-
-    <!-- Torcida Right -->
-    <div class="crowd right">
-      <div class="fans"></div>
-      <div class="ad-space">Publicidade</div>
-    </div>
-
-    <!-- Campo -->
-    <canvas id="gameCanvas" width="800" height="500"></canvas>
-
-    <!-- Tela reinício -->
-    <div id="restartScreen">
-      <h1 id="winnerText"></h1>
-      <p id="scoreText"></p>
-      <button onclick="restartGame()">Jogar Novamente</button>
-    </div>
-
+  <div id="restartScreen">
+    <h1 id="winnerText"></h1>
+    <p id="scoreText"></p>
+    <button onclick="restartGame()">Jogar Novamente</button>
   </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+</div>
