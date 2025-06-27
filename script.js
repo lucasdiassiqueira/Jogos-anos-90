@@ -139,9 +139,11 @@ function moveBall() {
   }
 }
 
+// Variáveis para animação torcida
 let crowdOffset = 0;
 let crowdDirection = 1;
 
+// Função para desenhar um torcedor pixelizado (quadradinhos)
 function drawPixelFan(x, y, color1, color2, jumping) {
   const size = 4;
   const jump = jumping ? -2 : 0;
@@ -156,28 +158,43 @@ function drawPixelFan(x, y, color1, color2, jumping) {
   ctx.fillRect(x + 4, y + size + jump, size, size);
 }
 
+// Função para desenhar a torcida nas bordas externas do campo
 function drawCrowd() {
   const spacingX = 14;
   const spacingY = 24;
-  const crowdLeftX = -16;
-  const crowdRightX = canvas.width + 6;
-  const crowdTopY = -16;
-  const crowdBottomY = canvas.height + 6;
 
+  // Torcida no topo - desenhada *acima* do campo (fora)
   const colsTop = Math.floor(canvas.width / spacingX);
   for (let c = 0; c < colsTop; c++) {
     const x = c * spacingX + 6;
+    const y = -20; // posição fora do canvas, para parecer fora do campo
     const jump = (c + crowdOffset) % 2 === 0;
-    drawPixelFan(x, crowdTopY, '#d40000', '#ffffff', jump);
-    drawPixelFan(x, crowdBottomY, '#d40000', '#ffffff', jump);
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
   }
 
+  // Torcida na base - desenhada *abaixo* do campo (fora)
+  for (let c = 0; c < colsTop; c++) {
+    const x = c * spacingX + 6;
+    const y = canvas.height + 6; // posição logo abaixo do campo
+    const jump = (c + crowdOffset) % 2 === 0;
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
+  }
+
+  // Torcida à esquerda - desenhada *à esquerda* do campo (fora)
   const rowsSide = Math.floor(canvas.height / spacingY);
   for (let r = 0; r < rowsSide; r++) {
     const y = r * spacingY + 12;
+    const x = -20; // fora do campo, à esquerda
     const jump = (r + crowdOffset) % 2 === 0;
-    drawPixelFan(crowdLeftX, y, '#d40000', '#ffffff', jump);
-    drawPixelFan(crowdRightX, y, '#d40000', '#ffffff', jump);
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
+  }
+
+  // Torcida à direita - desenhada *à direita* do campo (fora)
+  for (let r = 0; r < rowsSide; r++) {
+    const y = r * spacingY + 12;
+    const x = canvas.width + 6; // fora do campo, à direita
+    const jump = (r + crowdOffset) % 2 === 0;
+    drawPixelFan(x, y, '#d40000', '#ffffff', jump);
   }
 
   crowdOffset += crowdDirection;
