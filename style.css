@@ -15,6 +15,7 @@ body {
   align-items: center;
 }
 
+/* Campo */
 canvas {
   background-color: #0a8a0a;
   border: 6px solid #ffffff;
@@ -35,7 +36,7 @@ canvas {
 .crowd.top, .crowd.bottom {
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 80px;
   justify-content: center;
 }
 
@@ -43,16 +44,16 @@ canvas {
   top: 0;
   align-items: flex-end;
 }
-
 .crowd.bottom {
   bottom: 0;
   align-items: flex-start;
+  flex-direction: row-reverse;
 }
 
 .crowd.left, .crowd.right {
   top: 0;
   height: 100%;
-  width: 60px;
+  width: 80px;
   flex-direction: column;
   justify-content: center;
 }
@@ -61,21 +62,54 @@ canvas {
   left: 0;
   align-items: flex-end;
 }
-
 .crowd.right {
   right: 0;
   align-items: flex-start;
+  flex-direction: column-reverse;
+}
+
+/* Torcedor */
+.fan-container {
+  position: relative;
+  width: 32px;
+  height: 40px;
+  margin: 2px;
 }
 
 .fan {
-  width: 32px;
+  width: 100%;
   height: 32px;
-  background-image: url('New\ Piskel.png'); /* nome da imagem enviada */
+  background-image: ('New\ Piskel.png');
   background-size: contain;
   background-repeat: no-repeat;
   image-rendering: pixelated;
   animation: pular 1s infinite ease-in-out;
-  margin: 2px;
+  transform-origin: center;
+}
+
+/* Banco da arquibancada */
+.bench {
+  width: 100%;
+  height: 6px;
+  background-color: #333;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+}
+
+/* Rotação por lado */
+.crowd.left .fan {
+  transform: rotateY(180deg);
+}
+.crowd.right .fan {
+  transform: rotateY(0deg);
+}
+.crowd.top .fan {
+  transform: rotateX(0deg);
+}
+.crowd.bottom .fan {
+  transform: rotateX(180deg);
 }
 
 @keyframes pular {
@@ -83,11 +117,11 @@ canvas {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
-/* Reinício */
+/* Tela de reinício */
 #restartScreen {
   position: absolute;
   width: 800px;

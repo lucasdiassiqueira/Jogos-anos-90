@@ -268,26 +268,30 @@ function gerarTorcedores() {
 
   [top, bottom, left, right].forEach(el => el.innerHTML = '');
 
-  const totalTopBottom = 80;
-  const totalLeftRight = 40;
+  const totalTopBottom = 120;
+  const totalLeftRight = 80;
 
   for (let i = 0; i < totalTopBottom; i++) {
     const fanTop = document.createElement('div');
-    fanTop.className = 'fan';
+    fanTop.className = 'fan-container';
+    fanTop.innerHTML = `<div class="fan"></div><div class="bench"></div>`;
     top.appendChild(fanTop);
 
     const fanBottom = document.createElement('div');
-    fanBottom.className = 'fan';
+    fanBottom.className = 'fan-container';
+    fanBottom.innerHTML = `<div class="fan"></div><div class="bench"></div>`;
     bottom.appendChild(fanBottom);
   }
 
   for (let i = 0; i < totalLeftRight; i++) {
     const fanLeft = document.createElement('div');
-    fanLeft.className = 'fan';
+    fanLeft.className = 'fan-container';
+    fanLeft.innerHTML = `<div class="fan"></div><div class="bench"></div>`;
     left.appendChild(fanLeft);
 
     const fanRight = document.createElement('div');
-    fanRight.className = 'fan';
+    fanRight.className = 'fan-container';
+    fanRight.innerHTML = `<div class="fan"></div><div class="bench"></div>`;
     right.appendChild(fanRight);
   }
 }
