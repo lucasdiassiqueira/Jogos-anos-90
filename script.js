@@ -1,4 +1,3 @@
-// JavaScript completo do jogo
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -72,7 +71,6 @@ function startGame() {
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
-  gerarTorcedores();
   gameLoop();
 }
 
@@ -225,16 +223,14 @@ function gameLoop() {
 
 function showRestartScreen(winner) {
   paused = true;
-  document.getElementById("winnerText").textContent = winner;
-  document.getElementById("scoreText").textContent = `Placar final: ${score1} x ${score2}`;
-  document.getElementById("restartScreen").style.display = "flex";
+  alert(`${winner}\nPlacar final: ${score1} x ${score2}`);
+  restartGame();
 }
 
 function restartGame() {
   score1 = 0;
   score2 = 0;
   paused = false;
-  document.getElementById("restartScreen").style.display = "none";
   ball.reset();
   gameLoop();
 }
@@ -245,63 +241,3 @@ setInterval(() => {
     ball.speedY *= 1.05;
   }
 }, 2000);
-
-function gerarTorcedores() {
-  const top = document.querySelector('.crowd.top');
-  const bottom = document.querySelector('.crowd.bottom');
-  const left = document.querySelector('.crowd.left');
-  const right = document.querySelector('.crowd.right');
-
-  [top, bottom, left, right].forEach(el => el.innerHTML = '');
-
-  const totalTopBottom = 180;
-  const totalLeftRight = 150;
-
-  // Imagens diferentes para os torcedores
-  const fanImages = ['New Piskel.png', 'torcedor2.png']; // coloque o nome correto da segunda imagem
-
-  // Função para criar um torcedor com imagem alternada e delay aleatório
-  function criarFan(imageIndex) {
-    const fanDiv = document.createElement('div');
-    fanDiv.className = 'fan-container';
-    fanDiv.innerHTML = `<div class="fan"></div><div class="bench"></div>`;
-    const fanElem = fanDiv.querySelector('.fan');
-    fanElem.style.backgroundImage = `url('${fanImages[imageIndex]}')`;
-    fanElem.style.animationDelay = (Math.random()) + 's';
-    return fanDiv;
-  }
-
-  // *** Inversão solicitada das posições/rotação ***
-  // - top usa a classe e animação de bottom (torcedor olhando para baixo)
-  // - bottom usa a classe e animação de top (torcedor olhando para cima)
-  // - left usa a classe e animação de right (torcedor virado para a direita)
-  // - right usa a classe e animação de left (torcedor virado para a esquerda)
-
-  // Criando torcedores topo (com animação/bottom)
-  for (let i = 0; i < totalTopBottom; i++) {
-    const fan = criarFan(i % fanImages.length);
-    fan.querySelector('.fan').classList.add('pular-baixo'); // animação da bottom
-    bottom.appendChild(fan); // mas colocando na div bottom (top e bottom trocados)
-  }
-
-  // Criando torcedores fundo (com animação/top)
-  for (let i = 0; i < totalTopBottom; i++) {
-    const fan = criarFan(i % fanImages.length);
-    fan.querySelector('.fan').classList.add('pular-cima'); // animação da top
-    top.appendChild(fan); // colocando na div top
-  }
-
-  // Torcedores esquerda (com animação direita)
-  for (let i = 0; i < totalLeftRight; i++) {
-    const fan = criarFan(i % fanImages.length);
-    fan.querySelector('.fan').classList.add('pular-direita'); // animação da right
-    right.appendChild(fan); // colocando na div right (troca left/right)
-  }
-
-  // Torcedores direita (com animação esquerda)
-  for (let i = 0; i < totalLeftRight; i++) {
-    const fan = criarFan(i % fanImages.length);
-    fan.querySelector('.fan').classList.add('pular-esquerda'); // animação da left
-    left.appendChild(fan); // colocando na div left
-  }
-}
