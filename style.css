@@ -10,8 +10,9 @@ body {
 .stadium {
   position: relative;
   background-color: #aaa; /* cinza claro (arquibancada) */
-  padding: 40px; /* espaço para os torcedores */
+  padding: 60px; /* aumentei para 60px para mais espaço ao redor do campo */
   border-radius: 10px;
+  box-sizing: content-box; /* para garantir que o padding crie espaço visível fora do canvas */
 }
 
 /* Canvas = campo */
