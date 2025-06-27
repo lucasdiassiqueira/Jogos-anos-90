@@ -47,12 +47,18 @@ canvas::after {
 
 /* Linha do meio campo */
 canvas::before {
-  width: 4px;
+  content: "";
+  position: absolute;
+  width: 4px;               /* espessura sólida */
   height: 100%;
-  left: 50%;
   top: 0;
+  left: 50%;
+  background-color: white;  /* cor sólida */
   transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
 }
+
 
 /* Círculo central */
 canvas::after {
@@ -65,7 +71,87 @@ canvas::after {
   transform: translate(-50%, -50%);
 }
 
-/* Tela de reinício após o jogo */
+/* Linhas extras: escanteio, goleiro, pênalti */
+.field-markings {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Escanteios */
+.corner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid white;
+  border-radius: 0 0 0 100%;
+  position: absolute;
+}
+
+.tl { top: 0; left: 0; border-radius: 0 0 0 100%; border-top: none; border-left: none; }
+.tr { top: 0; right: 0; border-radius: 0 0 100% 0; border-top: none; border-right: none; }
+.bl { bottom: 0; left: 0; border-radius: 0 100% 0 0; border-bottom: none; border-left: none; }
+.br { bottom: 0; right: 0; border-radius: 100% 0 0 0; border-bottom: none; border-right: none; }
+
+/* Áreas do goleiro */
+.area {
+  position: absolute;
+  border: 3px solid white;
+}
+
+/* Grandes áreas */
+.area.big.left {
+  width: 100px;
+  height: 300px;
+  top: 100px;
+  left: 0;
+}
+
+.area.big.right {
+  width: 100px;
+  height: 300px;
+  top: 100px;
+  right: 0;
+}
+
+/* Pequenas áreas */
+.area.small.left {
+  width: 50px;
+  height: 150px;
+  top: 175px;
+  left: 0;
+}
+
+.area.small.right {
+  width: 50px;
+  height: 150px;
+  top: 175px;
+  right: 0;
+}
+
+/* Bolinhas do pênalti */
+.penalty-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.penalty-dot.left {
+  left: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.penalty-dot.right {
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Tela de reinício */
 #restartScreen {
   position: absolute;
   width: 800px;
