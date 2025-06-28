@@ -146,22 +146,60 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // fundo já é verde por CSS
+
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 10;
-  ctx.setLineDash([20, 20]);
+  ctx.lineWidth = 4;
+
+  // linha do meio
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
-  ctx.setLineDash([]);
 
+  // círculo central
   ctx.beginPath();
-  ctx.lineWidth = 10;
-  ctx.arc(canvas.width / 2, canvas.height / 2, 80, 0, Math.PI * 2);
+  ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
   ctx.stroke();
 
-  drawGoals();
+  // área grande esquerda
+  ctx.strokeRect(0, 100, 100, 300);
 
+  // área grande direita
+  ctx.strokeRect(canvas.width - 100, 100, 100, 300);
+
+  // área pequena esquerda
+  ctx.strokeRect(0, 175, 50, 150);
+
+  // área pequena direita
+  ctx.strokeRect(canvas.width - 50, 175, 50, 150);
+
+  // ponto do pênalti esquerdo
+  ctx.beginPath();
+  ctx.arc(70, canvas.height / 2, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // ponto do pênalti direito
+  ctx.beginPath();
+  ctx.arc(canvas.width - 70, canvas.height / 2, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // escanteios
+  const radius = 10;
+  const corners = [
+    [0, 0, 0],                         // topo-esquerdo
+    [canvas.width, 0, Math.PI / 2],    // topo-direito
+    [0, canvas.height, -Math.PI / 2],  // baixo-esquerdo
+    [canvas.width, canvas.height, Math.PI] // baixo-direito
+  ];
+
+  corners.forEach(([x, y, start]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, start, start + Math.PI / 2);
+    ctx.stroke();
+  });
+
+  // placar
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
   ctx.fillText(score1, canvas.width / 4, 50);

@@ -64,24 +64,6 @@ canvas::after {
   pointer-events: none;
 }
 
-/* Marcas do campo */
-.field-markings {
-  position: absolute;
-  width: 800px;
-  height: 500px;
-  z-index: 1; /* Atrás dos jogadores */
-  pointer-events: none;
-}
-
-/* Escanteios com curvas corretas */
-.corner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid white;
-  position: absolute;
-  border-radius: 100%;
-}
-
 .tl {
   top: 0;
   left: 0;
@@ -110,12 +92,6 @@ canvas::after {
   border-top: none;
 }
 
-/* Áreas do goleiro */
-.area {
-  position: absolute;
-  border: 3px solid white;
-}
-
 .area.big.left {
   width: 100px;
   height: 300px;
@@ -142,15 +118,6 @@ canvas::after {
   height: 150px;
   top: 175px;
   right: 0;
-}
-
-/* Bolinhas do pênalti */
-.penalty-dot {
-  width: 8px;
-  height: 8px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
 }
 
 .penalty-dot.left {
