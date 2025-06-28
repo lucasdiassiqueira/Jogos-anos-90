@@ -32,15 +32,34 @@ const ball = {
   angle: 0,
   rotationSpeed: 0.2,
   img: new Image(),
+  accelerationFactor: 1, // multiplicador para velocidade que vai crescendo
+  maxSpeed: 12,          // limite máximo de velocidade
   reset() {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     const dirX = Math.random() > 0.5 ? 1 : -1;
     const dirY = Math.random() > 0.5 ? 1 : -1;
-    const speed = 4 + (score1 + score2) * 0.5;
-    this.speedX = speed * dirX;
-    this.speedY = speed * dirY;
+    // velocidade inicial lenta (ex: 2) com base no score para aumentar depois
+    this.accelerationFactor = 1;
+    const baseSpeed = 2 + (score1 + score2) * 0.2;
+    this.speedX = baseSpeed * dirX;
+    this.speedY = baseSpeed * dirY;
     this.angle = 0;
+  },
+  accelerate() {
+    // Aumenta a velocidade 5% até o maxSpeed
+    if (Math.abs(this.speedX) < this.maxSpeed) {
+      this.speedX *= 1.05;
+      if (Math.abs(this.speedX) > this.maxSpeed) {
+        this.speedX = this.maxSpeed * Math.sign(this.speedX);
+      }
+    }
+    if (Math.abs(this.speedY) < this.maxSpeed) {
+      this.speedY *= 1.05;
+      if (Math.abs(this.speedY) > this.maxSpeed) {
+        this.speedY = this.maxSpeed * Math.sign(this.speedY);
+      }
+    }
   }
 };
 
@@ -71,6 +90,14 @@ function startGame() {
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
+
+  // Acelera a bola a cada 2 segundos só se o jogo não estiver pausado
+  setInterval(() => {
+    if (!paused) {
+      ball.accelerate();
+    }
+  }, 2000);
+
   gameLoop();
 }
 
@@ -89,7 +116,13 @@ function moveBall() {
   ball.y += ball.speedY;
   ball.angle += ball.rotationSpeed;
 
-  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+  // Rebote no teto e chão
+  if (ball.y - ball.radius < 0) {
+    ball.y = ball.radius;
+    ball.speedY *= -1;
+  }
+  if (ball.y + ball.radius > canvas.height) {
+    ball.y = canvas.height - ball.radius;
     ball.speedY *= -1;
   }
 
@@ -106,16 +139,25 @@ function moveBall() {
 
   if (isLeftGoal) {
     score2++;
-    score2 >= 5 ? showRestartScreen("Jogador 2 venceu!") : ball.reset();
+    if (score2 >= 5) {
+      showRestartScreen("Jogador 2 venceu!");
+    } else {
+      ball.reset();
+    }
     return;
   }
 
   if (isRightGoal) {
     score1++;
-    score1 >= 5 ? showRestartScreen("Jogador 1 venceu!") : ball.reset();
+    if (score1 >= 5) {
+      showRestartScreen("Jogador 1 venceu!");
+    } else {
+      ball.reset();
+    }
     return;
   }
 
+  // Rebote na lateral do gol (não é gol)
   const bateLateralDoGol =
     (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
      (ball.y <= goalLeft.y + 10 || ball.y >= goalLeft.y + goalLeft.height - 10)) ||
@@ -126,11 +168,12 @@ function moveBall() {
     ball.speedX *= -1;
   }
 
+  // Colisão com jogadores
   if (ball.x - ball.radius < player1.x + playerWidth &&
       ball.x > player1.x &&
       ball.y + ball.radius > player1.y &&
       ball.y - ball.radius < player1.y + playerHeight) {
-    ball.speedX *= -1;
+    ball.speedX = Math.abs(ball.speedX); // força a bola a ir para a direita
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
@@ -138,7 +181,7 @@ function moveBall() {
       ball.x < player2.x + playerWidth &&
       ball.y + ball.radius > player2.y &&
       ball.y - ball.radius < player2.y + playerHeight) {
-    ball.speedX *= -1;
+    ball.speedX = -Math.abs(ball.speedX); // força a bola a ir para a esquerda
     ball.x = player2.x - ball.radius;
   }
 }
@@ -146,45 +189,41 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // fundo já é verde por CSS
+  // Fundo verde já pelo CSS
 
   ctx.strokeStyle = "white";
   ctx.lineWidth = 4;
 
-  // linha do meio
+  // Linha do meio
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
 
-  // círculo central
+  // Círculo central
   ctx.beginPath();
   ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
   ctx.stroke();
 
-  // área grande esquerda
+  // Áreas grandes
   ctx.strokeRect(0, 100, 100, 300);
-
-  // área grande direita
   ctx.strokeRect(canvas.width - 100, 100, 100, 300);
 
-  // área pequena esquerda
+  // Áreas pequenas
   ctx.strokeRect(0, 175, 50, 150);
-
-  // área pequena direita
   ctx.strokeRect(canvas.width - 50, 175, 50, 150);
 
-  // ponto do pênalti esquerdo
+  // Pontos do pênalti
   ctx.beginPath();
   ctx.arc(70, canvas.height / 2, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "white";
   ctx.fill();
 
-  // ponto do pênalti direito
   ctx.beginPath();
   ctx.arc(canvas.width - 70, canvas.height / 2, 4, 0, Math.PI * 2);
   ctx.fill();
 
-  // escanteios
+  // Escanteios (arcos)
   const radius = 10;
   const corners = [
     [0, 0, 0],                         // topo-esquerdo
@@ -193,13 +232,14 @@ function drawField() {
     [canvas.width, canvas.height, Math.PI] // baixo-direito
   ];
 
+  ctx.strokeStyle = "white";
   corners.forEach(([x, y, start]) => {
     ctx.beginPath();
     ctx.arc(x, y, radius, start, start + Math.PI / 2);
     ctx.stroke();
   });
 
-  // placar
+  // Placar
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
   ctx.fillText(score1, canvas.width / 4, 50);
@@ -209,37 +249,45 @@ function drawField() {
 function drawGoals() {
   const goalTop = canvas.height / 4;
   const goalHeight = canvas.height / 2;
-  ctx.fillStyle = "white";
-  ctx.fillRect(20, goalTop, 10, goalHeight);
-  ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
   ctx.strokeStyle = "white";
+  ctx.lineWidth = 6;
+
+  // Desenha o contorno das metas (só contorno para não esconder o campo)
+  ctx.strokeRect(20, goalTop, 10, goalHeight);
+  ctx.strokeRect(canvas.width - 30, goalTop, 10, goalHeight);
+
+  // Desenha linhas horizontais da rede nas metas
   ctx.lineWidth = 1;
   for (let i = 0; i <= goalHeight; i += 10) {
     ctx.beginPath();
-    ctx.moveTo(0, goalTop + i);
-    ctx.lineTo(20, goalTop + i);
+    ctx.moveTo(20, goalTop + i);
+    ctx.lineTo(30, goalTop + i);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(canvas.width, goalTop + i);
+    ctx.moveTo(canvas.width - 30, goalTop + i);
     ctx.lineTo(canvas.width - 20, goalTop + i);
     ctx.stroke();
   }
-  for (let i = 0; i <= 20; i += 10) {
+
+  // Desenha linhas verticais da rede nas metas
+  for (let i = 0; i <= 10; i += 5) {
     ctx.beginPath();
-    ctx.moveTo(i, goalTop);
-    ctx.lineTo(i, goalTop + goalHeight);
+    ctx.moveTo(20 + i, goalTop);
+    ctx.lineTo(20 + i, goalTop + goalHeight);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(canvas.width - i, goalTop);
-    ctx.lineTo(canvas.width - i, goalTop + goalHeight);
+    ctx.moveTo(canvas.width - 30 + i, goalTop);
+    ctx.lineTo(canvas.width - 30 + i, goalTop + goalHeight);
     ctx.stroke();
   }
 }
 
 function draw() {
   drawField();
+  drawGoals();
+
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
 
@@ -272,10 +320,3 @@ function restartGame() {
   ball.reset();
   gameLoop();
 }
-
-setInterval(() => {
-  if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
-    ball.speedX *= 1.05;
-    ball.speedY *= 1.05;
-  }
-}, 2000);
