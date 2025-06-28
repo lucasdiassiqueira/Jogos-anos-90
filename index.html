@@ -1,15 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ping Pong Futebol</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
 <body>
   <div class="stadium">
     <canvas id="gameCanvas" width="800" height="500"></canvas>
 
+    <!-- Marcas do campo -->
+    <div class="field-markings">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="area big left"></div>
+      <div class="area big right"></div>
+      <div class="area small left"></div>
+      <div class="area small right"></div>
+
+      <div class="penalty-dot left"></div>
+      <div class="penalty-dot right"></div>
+    </div>
+
+    <!-- Tela de reinício -->
     <div id="restartScreen">
       <h1 id="winnerText"></h1>
       <p id="scoreText"></p>
@@ -17,33 +26,5 @@
     </div>
   </div>
 
-  <div class="stadium">
-  <canvas id="gameCanvas" width="800" height="500"></canvas>
-
-  <!-- Marcas do campo -->
-  <div class="field-markings">
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
-
-    <div class="area big left"></div>
-    <div class="area big right"></div>
-    <div class="area small left"></div>
-    <div class="area small right"></div>
-
-    <div class="penalty-dot left"></div>
-    <div class="penalty-dot right"></div>
-  </div>
-
-  <div id="restartScreen">
-    <h1>Gol!</h1>
-    <p>Pressione espaço para reiniciar</p>
-    <button onclick="location.reload()">Reiniciar</button>
-  </div>
-</div>
-
-
   <script src="script.js"></script>
 </body>
-</html>
