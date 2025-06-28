@@ -71,6 +71,7 @@ function startGame() {
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
+  distribuirTorcida();
   gameLoop();
 }
 
@@ -241,3 +242,34 @@ setInterval(() => {
     ball.speedY *= 1.05;
   }
 }, 2000);
+
+// Torcida
+const torcedores = ["torcedor.png", "torcedor2.png"];
+
+function distribuirTorcida() {
+  const crowdContainer = document.querySelector('.crowd');
+  const canvasRect = canvas.getBoundingClientRect();
+
+  const larguraTela = window.innerWidth;
+  const alturaTela = window.innerHeight;
+  const spacing = 40;
+
+  for (let x = 0; x < larguraTela; x += spacing) {
+    criarTorcedor(x, canvasRect.top - 45);
+    criarTorcedor(x, canvasRect.bottom + 5);
+  }
+
+  for (let y = 0; y < alturaTela; y += spacing) {
+    criarTorcedor(canvasRect.left - 45, y);
+    criarTorcedor(canvasRect.right + 5, y);
+  }
+}
+
+function criarTorcedor(x, y) {
+  const crowdContainer = document.querySelector('.crowd');
+  const img = document.createElement('img');
+  img.src = torcedores[Math.floor(Math.random() * torcedores.length)];
+  img.style.left = `${x}px`;
+  img.style.top = `${y}px`;
+  crowdContainer.appendChild(img);
+}

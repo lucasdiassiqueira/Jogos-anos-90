@@ -27,7 +27,6 @@ canvas {
   z-index: 2;
 }
 
-/* Tela de reinício após o jogo */
 #restartScreen {
   position: absolute;
   width: 800px;
@@ -71,4 +70,18 @@ canvas {
 
 #restartScreen button:hover {
   background-color: #ddd;
+}
+
+.crowd {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.crowd img {
+  position: absolute;
+  width: 40px;
+  height: 40px;
 }
