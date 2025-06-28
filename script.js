@@ -32,15 +32,12 @@ const ball = {
   angle: 0,
   rotationSpeed: 0.2,
   img: new Image(),
-  accelerationFactor: 1, // multiplicador para velocidade que vai crescendo
-  maxSpeed: 12,          // limite máximo de velocidade
+  maxSpeed: 12,
   reset() {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     const dirX = Math.random() > 0.5 ? 1 : -1;
     const dirY = Math.random() > 0.5 ? 1 : -1;
-    // velocidade inicial lenta (ex: 2) com base no score para aumentar depois
-    this.accelerationFactor = 1;
     const baseSpeed = 2 + (score1 + score2) * 0.2;
     this.speedX = baseSpeed * dirX;
     this.speedY = baseSpeed * dirY;
@@ -91,7 +88,6 @@ function startGame() {
   ball.img = ballImg;
   ball.reset();
 
-  // Acelera a bola a cada 2 segundos só se o jogo não estiver pausado
   setInterval(() => {
     if (!paused) {
       ball.accelerate();
@@ -252,11 +248,11 @@ function drawGoals() {
   ctx.strokeStyle = "white";
   ctx.lineWidth = 6;
 
-  // Desenha o contorno das metas (só contorno para não esconder o campo)
+  // Contorno das metas
   ctx.strokeRect(20, goalTop, 10, goalHeight);
   ctx.strokeRect(canvas.width - 30, goalTop, 10, goalHeight);
 
-  // Desenha linhas horizontais da rede nas metas
+  // Linhas horizontais da rede
   ctx.lineWidth = 1;
   for (let i = 0; i <= goalHeight; i += 10) {
     ctx.beginPath();
@@ -270,7 +266,7 @@ function drawGoals() {
     ctx.stroke();
   }
 
-  // Desenha linhas verticais da rede nas metas
+  // Linhas verticais da rede
   for (let i = 0; i <= 10; i += 5) {
     ctx.beginPath();
     ctx.moveTo(20 + i, goalTop);
