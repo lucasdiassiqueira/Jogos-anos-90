@@ -27,8 +27,8 @@ const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   radius: 15,
-  speedX: 0,
-  speedY: 0,
+  speedX: 3,
+  speedY: 3,
   angle: 0,
   rotationSpeed: 0.2,
   img: new Image(),
@@ -38,25 +38,13 @@ const ball = {
     this.y = canvas.height / 2;
     const dirX = Math.random() > 0.5 ? 1 : -1;
     const dirY = Math.random() > 0.5 ? 1 : -1;
-    const baseSpeed = 2 + (score1 + score2) * 0.2;
-    this.speedX = baseSpeed * dirX;
-    this.speedY = baseSpeed * dirY;
+    this.speedX = 3 * dirX;
+    this.speedY = 3 * dirY;
     this.angle = 0;
   },
   accelerate() {
-    // Aumenta a velocidade 5% até o maxSpeed
-    if (Math.abs(this.speedX) < this.maxSpeed) {
-      this.speedX *= 1.05;
-      if (Math.abs(this.speedX) > this.maxSpeed) {
-        this.speedX = this.maxSpeed * Math.sign(this.speedX);
-      }
-    }
-    if (Math.abs(this.speedY) < this.maxSpeed) {
-      this.speedY *= 1.05;
-      if (Math.abs(this.speedY) > this.maxSpeed) {
-        this.speedY = this.maxSpeed * Math.sign(this.speedY);
-      }
-    }
+    if (Math.abs(this.speedX) < this.maxSpeed) this.speedX *= 1.05;
+    if (Math.abs(this.speedY) < this.maxSpeed) this.speedY *= 1.05;
   }
 };
 
@@ -89,16 +77,14 @@ function startGame() {
   ball.reset();
 
   setInterval(() => {
-    if (!paused) {
-      ball.accelerate();
-    }
+    if (!paused) ball.accelerate();
   }, 2000);
 
   gameLoop();
 }
 
-document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
+document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
 function movePlayers() {
   if (keys["w"] && player1.y > 0) player1.y -= player1.speed;
@@ -112,13 +98,7 @@ function moveBall() {
   ball.y += ball.speedY;
   ball.angle += ball.rotationSpeed;
 
-  // Rebote no teto e chão
-  if (ball.y - ball.radius < 0) {
-    ball.y = ball.radius;
-    ball.speedY *= -1;
-  }
-  if (ball.y + ball.radius > canvas.height) {
-    ball.y = canvas.height - ball.radius;
+  if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
     ball.speedY *= -1;
   }
 
@@ -153,7 +133,6 @@ function moveBall() {
     return;
   }
 
-  // Rebote na lateral do gol (não é gol)
   const bateLateralDoGol =
     (ball.x - ball.radius <= goalLeft.x + goalLeft.width &&
      (ball.y <= goalLeft.y + 10 || ball.y >= goalLeft.y + goalLeft.height - 10)) ||
@@ -164,12 +143,11 @@ function moveBall() {
     ball.speedX *= -1;
   }
 
-  // Colisão com jogadores
   if (ball.x - ball.radius < player1.x + playerWidth &&
       ball.x > player1.x &&
       ball.y + ball.radius > player1.y &&
       ball.y - ball.radius < player1.y + playerHeight) {
-    ball.speedX = Math.abs(ball.speedX); // força a bola a ir para a direita
+    ball.speedX = Math.abs(ball.speedX);
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
@@ -177,7 +155,7 @@ function moveBall() {
       ball.x < player2.x + playerWidth &&
       ball.y + ball.radius > player2.y &&
       ball.y - ball.radius < player2.y + playerHeight) {
-    ball.speedX = -Math.abs(ball.speedX); // força a bola a ir para a esquerda
+    ball.speedX = -Math.abs(ball.speedX);
     ball.x = player2.x - ball.radius;
   }
 }
@@ -185,31 +163,24 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Fundo verde já pelo CSS
-
   ctx.strokeStyle = "white";
   ctx.lineWidth = 4;
 
-  // Linha do meio
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
 
-  // Círculo central
   ctx.beginPath();
   ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Áreas grandes
   ctx.strokeRect(0, 100, 100, 300);
   ctx.strokeRect(canvas.width - 100, 100, 100, 300);
 
-  // Áreas pequenas
   ctx.strokeRect(0, 175, 50, 150);
   ctx.strokeRect(canvas.width - 50, 175, 50, 150);
 
-  // Pontos do pênalti
   ctx.beginPath();
   ctx.arc(70, canvas.height / 2, 4, 0, Math.PI * 2);
   ctx.fillStyle = "white";
@@ -219,13 +190,12 @@ function drawField() {
   ctx.arc(canvas.width - 70, canvas.height / 2, 4, 0, Math.PI * 2);
   ctx.fill();
 
-  // Escanteios (arcos)
   const radius = 10;
   const corners = [
-    [0, 0, 0],                         // topo-esquerdo
-    [canvas.width, 0, Math.PI / 2],    // topo-direito
-    [0, canvas.height, -Math.PI / 2],  // baixo-esquerdo
-    [canvas.width, canvas.height, Math.PI] // baixo-direito
+    [0, 0, 0],
+    [canvas.width, 0, Math.PI / 2],
+    [0, canvas.height, -Math.PI / 2],
+    [canvas.width, canvas.height, Math.PI]
   ];
 
   ctx.strokeStyle = "white";
@@ -235,54 +205,14 @@ function drawField() {
     ctx.stroke();
   });
 
-  // Placar
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
   ctx.fillText(score1, canvas.width / 4, 50);
   ctx.fillText(score2, (canvas.width * 3) / 4, 50);
 }
 
-function drawGoals() {
-  const goalTop = canvas.height / 4;
-  const goalHeight = canvas.height / 2;
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 6;
-
-  // Contorno das metas
-  ctx.strokeRect(20, goalTop, 10, goalHeight);
-  ctx.strokeRect(canvas.width - 30, goalTop, 10, goalHeight);
-
-  // Linhas horizontais da rede
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= goalHeight; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(20, goalTop + i);
-    ctx.lineTo(30, goalTop + i);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - 30, goalTop + i);
-    ctx.lineTo(canvas.width - 20, goalTop + i);
-    ctx.stroke();
-  }
-
-  // Linhas verticais da rede
-  for (let i = 0; i <= 10; i += 5) {
-    ctx.beginPath();
-    ctx.moveTo(20 + i, goalTop);
-    ctx.lineTo(20 + i, goalTop + goalHeight);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(canvas.width - 30 + i, goalTop);
-    ctx.lineTo(canvas.width - 30 + i, goalTop + goalHeight);
-    ctx.stroke();
-  }
-}
-
 function draw() {
   drawField();
-  drawGoals();
 
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);

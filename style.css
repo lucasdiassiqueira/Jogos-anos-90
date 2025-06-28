@@ -1,3 +1,4 @@
+/* Corpo da página */
 body {
   margin: 0;
   background: #444;
@@ -6,12 +7,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: Arial, sans-serif;
 }
 
+/* Container do estádio */
 .stadium {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 800px;   /* fixo igual ao canvas */
+  height: 500px;  /* fixo igual ao canvas */
   background-color: #aaa;
   display: flex;
   justify-content: center;
@@ -19,6 +22,7 @@ body {
   box-sizing: border-box;
 }
 
+/* Canvas do jogo */
 canvas {
   position: relative;
   background:
@@ -32,10 +36,11 @@ canvas {
   border: 6px solid #ffffff;
   box-shadow: 0 0 20px black;
   display: block;
-  z-index: 2; /* Jogadores acima */
+  z-index: 2; /* jogadores ficam acima */
+  /* Para os pseudoelementos funcionarem no canvas, ele precisa ser position: relative (já está) */
 }
 
-/* Linha do meio campo */
+/* Linha do meio campo (vertical) */
 canvas::before {
   content: "";
   position: absolute;
@@ -64,74 +69,6 @@ canvas::after {
   pointer-events: none;
 }
 
-.tl {
-  top: 0;
-  left: 0;
-  border-right: none;
-  border-bottom: none;
-}
-
-.tr {
-  top: 0;
-  right: 0;
-  border-left: none;
-  border-bottom: none;
-}
-
-.bl {
-  bottom: 0;
-  left: 0;
-  border-right: none;
-  border-top: none;
-}
-
-.br {
-  bottom: 0;
-  right: 0;
-  border-left: none;
-  border-top: none;
-}
-
-.area.big.left {
-  width: 100px;
-  height: 300px;
-  top: 100px;
-  left: 0;
-}
-
-.area.big.right {
-  width: 100px;
-  height: 300px;
-  top: 100px;
-  right: 0;
-}
-
-.area.small.left {
-  width: 50px;
-  height: 150px;
-  top: 175px;
-  left: 0;
-}
-
-.area.small.right {
-  width: 50px;
-  height: 150px;
-  top: 175px;
-  right: 0;
-}
-
-.penalty-dot.left {
-  left: 70px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.penalty-dot.right {
-  right: 70px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
 /* Tela de reinício */
 #restartScreen {
   position: absolute;
@@ -142,7 +79,7 @@ canvas::after {
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
-  display: none;
+  display: none; /* fica invisível até o jogo chamar para mostrar */
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -153,6 +90,7 @@ canvas::after {
   padding: 20px;
 }
 
+/* Texto da tela de reinício */
 #restartScreen h1 {
   font-size: 2rem;
 }
@@ -162,6 +100,7 @@ canvas::after {
   font-size: 1.2rem;
 }
 
+/* Botão da tela de reinício */
 #restartScreen button {
   margin-top: 20px;
   padding: 10px 20px;
