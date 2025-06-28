@@ -47,9 +47,14 @@ const ball = {
 const player1Img = new Image();
 const player2Img = new Image();
 const ballImg = new Image();
+const torcedor1Img = new Image();
+const torcedor2Img = new Image();
+
+torcedor1Img.src = 'torcedor.png';
+torcedor2Img.src = 'torcedor2.png';
 
 let imagesLoaded = 0;
-const totalImages = 3;
+const totalImages = 5;
 
 function checkAllLoaded() {
   imagesLoaded++;
@@ -65,13 +70,14 @@ ballImg.src = 'bola.png';
 player1Img.onload = checkAllLoaded;
 player2Img.onload = checkAllLoaded;
 ballImg.onload = checkAllLoaded;
+torcedor1Img.onload = checkAllLoaded;
+torcedor2Img.onload = checkAllLoaded;
 
 function startGame() {
   player1.img = player1Img;
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
-  distribuirTorcida();
   gameLoop();
 }
 
@@ -147,6 +153,9 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Torcedores em volta (parte visual fixa)
+  drawFans();
+
   ctx.strokeStyle = "white";
   ctx.lineWidth = 10;
   ctx.setLineDash([20, 20]);
@@ -201,6 +210,33 @@ function drawGoals() {
   }
 }
 
+function drawFans() {
+  const spacing = 35;
+  const offset = 10;
+  let toggle = true;
+
+  // Topo
+  for (let x = offset; x < canvas.width - 30; x += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, offset, 30, 30);
+    toggle = !toggle;
+  }
+  // Baixo
+  for (let x = offset; x < canvas.width - 30; x += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, canvas.height + offset - 30, 30, 30);
+    toggle = !toggle;
+  }
+  // Esquerda
+  for (let y = offset; y < canvas.height - 30; y += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, offset, y, 30, 30);
+    toggle = !toggle;
+  }
+  // Direita
+  for (let y = offset; y < canvas.height - 30; y += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, canvas.width - 30, y, 30, 30);
+    toggle = !toggle;
+  }
+}
+
 function draw() {
   drawField();
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
@@ -242,34 +278,3 @@ setInterval(() => {
     ball.speedY *= 1.05;
   }
 }, 2000);
-
-// Torcida
-const torcedores = ["torcedor.png", "torcedor2.png"];
-
-function distribuirTorcida() {
-  const crowdContainer = document.querySelector('.crowd');
-  const canvasRect = canvas.getBoundingClientRect();
-
-  const larguraTela = window.innerWidth;
-  const alturaTela = window.innerHeight;
-  const spacing = 40;
-
-  for (let x = 0; x < larguraTela; x += spacing) {
-    criarTorcedor(x, canvasRect.top - 45);
-    criarTorcedor(x, canvasRect.bottom + 5);
-  }
-
-  for (let y = 0; y < alturaTela; y += spacing) {
-    criarTorcedor(canvasRect.left - 45, y);
-    criarTorcedor(canvasRect.right + 5, y);
-  }
-}
-
-function criarTorcedor(x, y) {
-  const crowdContainer = document.querySelector('.crowd');
-  const img = document.createElement('img');
-  img.src = torcedores[Math.floor(Math.random() * torcedores.length)];
-  img.style.left = `${x}px`;
-  img.style.top = `${y}px`;
-  crowdContainer.appendChild(img);
-}
