@@ -32,36 +32,27 @@ canvas {
   border: 6px solid #ffffff;
   box-shadow: 0 0 20px black;
   display: block;
-  z-index: 2;
-}
-
-/* Círculo central e linha do meio campo */
-canvas::before,
-canvas::after {
-  content: "";
-  position: absolute;
-  background: white;
-  z-index: 3;
-  pointer-events: none;
+  z-index: 2; /* Jogadores acima */
 }
 
 /* Linha do meio campo */
 canvas::before {
   content: "";
   position: absolute;
-  width: 4px;               /* espessura sólida */
+  width: 4px;
   height: 100%;
   top: 0;
   left: 50%;
-  background-color: white;  /* cor sólida */
+  background-color: white;
   transform: translateX(-50%);
   z-index: 3;
   pointer-events: none;
 }
 
-
 /* Círculo central */
 canvas::after {
+  content: "";
+  position: absolute;
   width: 120px;
   height: 120px;
   border: 3px solid white;
@@ -69,30 +60,55 @@ canvas::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-/* Linhas extras: escanteio, goleiro, pênalti */
-.field-markings {
-  position: absolute;
-  width: 800px;
-  height: 500px;
   z-index: 3;
   pointer-events: none;
 }
 
-/* Escanteios */
-.corner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid white;
-  border-radius: 0 0 0 100%;
+/* Marcas do campo */
+.field-markings {
   position: absolute;
+  width: 800px;
+  height: 500px;
+  z-index: 1; /* Atrás dos jogadores */
+  pointer-events: none;
 }
 
-.tl { top: 0; left: 0; border-radius: 0 0 0 100%; border-top: none; border-left: none; }
-.tr { top: 0; right: 0; border-radius: 0 0 100% 0; border-top: none; border-right: none; }
-.bl { bottom: 0; left: 0; border-radius: 0 100% 0 0; border-bottom: none; border-left: none; }
-.br { bottom: 0; right: 0; border-radius: 100% 0 0 0; border-bottom: none; border-right: none; }
+/* Escanteios com curvas corretas */
+.corner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid white;
+  position: absolute;
+  border-radius: 100%;
+}
+
+.tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
 
 /* Áreas do goleiro */
 .area {
@@ -100,7 +116,6 @@ canvas::after {
   border: 3px solid white;
 }
 
-/* Grandes áreas */
 .area.big.left {
   width: 100px;
   height: 300px;
@@ -115,7 +130,6 @@ canvas::after {
   right: 0;
 }
 
-/* Pequenas áreas */
 .area.small.left {
   width: 50px;
   height: 150px;
