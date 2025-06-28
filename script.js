@@ -27,24 +27,20 @@ const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   radius: 15,
-  speedX: 3,
-  speedY: 3,
+  speedX: 0,
+  speedY: 0,
   angle: 0,
   rotationSpeed: 0.2,
   img: new Image(),
-  maxSpeed: 12,
   reset() {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     const dirX = Math.random() > 0.5 ? 1 : -1;
     const dirY = Math.random() > 0.5 ? 1 : -1;
-    this.speedX = 3 * dirX;
-    this.speedY = 3 * dirY;
+    const speed = 4 + (score1 + score2) * 0.5;
+    this.speedX = speed * dirX;
+    this.speedY = speed * dirY;
     this.angle = 0;
-  },
-  accelerate() {
-    if (Math.abs(this.speedX) < this.maxSpeed) this.speedX *= 1.05;
-    if (Math.abs(this.speedY) < this.maxSpeed) this.speedY *= 1.05;
   }
 };
 
@@ -75,16 +71,11 @@ function startGame() {
   player2.img = player2Img;
   ball.img = ballImg;
   ball.reset();
-
-  setInterval(() => {
-    if (!paused) ball.accelerate();
-  }, 2000);
-
   gameLoop();
 }
 
-document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
 function movePlayers() {
   if (keys["w"] && player1.y > 0) player1.y -= player1.speed;
@@ -115,21 +106,13 @@ function moveBall() {
 
   if (isLeftGoal) {
     score2++;
-    if (score2 >= 5) {
-      showRestartScreen("Jogador 2 venceu!");
-    } else {
-      ball.reset();
-    }
+    score2 >= 5 ? showRestartScreen("Jogador 2 venceu!") : ball.reset();
     return;
   }
 
   if (isRightGoal) {
     score1++;
-    if (score1 >= 5) {
-      showRestartScreen("Jogador 1 venceu!");
-    } else {
-      ball.reset();
-    }
+    score1 >= 5 ? showRestartScreen("Jogador 1 venceu!") : ball.reset();
     return;
   }
 
@@ -147,7 +130,7 @@ function moveBall() {
       ball.x > player1.x &&
       ball.y + ball.radius > player1.y &&
       ball.y - ball.radius < player1.y + playerHeight) {
-    ball.speedX = Math.abs(ball.speedX);
+    ball.speedX *= -1;
     ball.x = player1.x + playerWidth + ball.radius;
   }
 
@@ -155,7 +138,7 @@ function moveBall() {
       ball.x < player2.x + playerWidth &&
       ball.y + ball.radius > player2.y &&
       ball.y - ball.radius < player2.y + playerHeight) {
-    ball.speedX = -Math.abs(ball.speedX);
+    ball.speedX *= -1;
     ball.x = player2.x - ball.radius;
   }
 }
@@ -164,46 +147,20 @@ function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 4;
-
+  ctx.lineWidth = 10;
+  ctx.setLineDash([20, 20]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
+  ctx.setLineDash([]);
 
   ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
+  ctx.lineWidth = 10;
+  ctx.arc(canvas.width / 2, canvas.height / 2, 80, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeRect(0, 100, 100, 300);
-  ctx.strokeRect(canvas.width - 100, 100, 100, 300);
-
-  ctx.strokeRect(0, 175, 50, 150);
-  ctx.strokeRect(canvas.width - 50, 175, 50, 150);
-
-  ctx.beginPath();
-  ctx.arc(70, canvas.height / 2, 4, 0, Math.PI * 2);
-  ctx.fillStyle = "white";
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(canvas.width - 70, canvas.height / 2, 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  const radius = 10;
-  const corners = [
-    [0, 0, 0],
-    [canvas.width, 0, Math.PI / 2],
-    [0, canvas.height, -Math.PI / 2],
-    [canvas.width, canvas.height, Math.PI]
-  ];
-
-  ctx.strokeStyle = "white";
-  corners.forEach(([x, y, start]) => {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, start, start + Math.PI / 2);
-    ctx.stroke();
-  });
+  drawGoals();
 
   ctx.fillStyle = "white";
   ctx.font = "36px Arial";
@@ -211,9 +168,40 @@ function drawField() {
   ctx.fillText(score2, (canvas.width * 3) / 4, 50);
 }
 
+function drawGoals() {
+  const goalTop = canvas.height / 4;
+  const goalHeight = canvas.height / 2;
+  ctx.fillStyle = "white";
+  ctx.fillRect(20, goalTop, 10, goalHeight);
+  ctx.fillRect(canvas.width - 30, goalTop, 10, goalHeight);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= goalHeight; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(0, goalTop + i);
+    ctx.lineTo(20, goalTop + i);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width, goalTop + i);
+    ctx.lineTo(canvas.width - 20, goalTop + i);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= 20; i += 10) {
+    ctx.beginPath();
+    ctx.moveTo(i, goalTop);
+    ctx.lineTo(i, goalTop + goalHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - i, goalTop);
+    ctx.lineTo(canvas.width - i, goalTop + goalHeight);
+    ctx.stroke();
+  }
+}
+
 function draw() {
   drawField();
-
   ctx.drawImage(player1.img, player1.x, player1.y, playerWidth, playerHeight);
   ctx.drawImage(player2.img, player2.x, player2.y, playerWidth, playerHeight);
 
@@ -246,3 +234,10 @@ function restartGame() {
   ball.reset();
   gameLoop();
 }
+
+setInterval(() => {
+  if (!paused && (ball.speedX !== 0 || ball.speedY !== 0)) {
+    ball.speedX *= 1.05;
+    ball.speedY *= 1.05;
+  }
+}, 2000);
