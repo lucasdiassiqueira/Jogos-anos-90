@@ -212,30 +212,34 @@ function drawGoals() {
 
 function drawFans() {
   const spacing = 35;
-  const offset = 10;
   let toggle = true;
+  const fanSize = 30;
 
-  // Topo
-  for (let x = offset; x < canvas.width - 30; x += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, offset, 30, 30);
+  // Topo (fora do campo)
+  for (let x = -60; x < canvas.width + 60; x += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, -70, fanSize, fanSize);
     toggle = !toggle;
   }
-  // Baixo
-  for (let x = offset; x < canvas.width - 30; x += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, canvas.height + offset - 30, 30, 30);
+
+  // Baixo (fora do campo)
+  for (let x = -60; x < canvas.width + 60; x += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, canvas.height + 40, fanSize, fanSize);
     toggle = !toggle;
   }
-  // Esquerda
-  for (let y = offset; y < canvas.height - 30; y += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, offset, y, 30, 30);
+
+  // Esquerda (fora do campo)
+  for (let y = -60; y < canvas.height + 60; y += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, -70, y, fanSize, fanSize);
     toggle = !toggle;
   }
-  // Direita
-  for (let y = offset; y < canvas.height - 30; y += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, canvas.width - 30, y, 30, 30);
+
+  // Direita (fora do campo)
+  for (let y = -60; y < canvas.height + 60; y += spacing) {
+    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, canvas.width + 40, y, fanSize, fanSize);
     toggle = !toggle;
   }
 }
+
 
 function draw() {
   drawField();

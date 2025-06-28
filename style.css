@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #444; /* fundo cinza escuro (arquibancada superior) */
+  background: #444;
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -12,22 +12,22 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #aaa; /* fundo cinza claro (arquibancada inferior) */
+  background-color: #aaa; /* borda cinza clara ao redor */
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  padding: 80px; /* largura da borda da arquibancada */
 }
 
 canvas {
-  background-color: #0a8a0a; /* campo verde */
+  background-color: #0a8a0a;
   border: 6px solid #ffffff;
   box-shadow: 0 0 20px black;
-  display: block;
   z-index: 2;
 }
 
-/* Tela de reinício após o jogo */
+/* Tela de reinício */
 #restartScreen {
   position: absolute;
   width: 800px;
