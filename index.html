@@ -47,7 +47,7 @@
     const ctx = canvas.getContext("2d");
     const successMessage = document.getElementById("success-message");
 
-    // Troque as URLs pelas suas imagens do GitHub (carro jogador e carros estacionados)
+    // Imagens (troque para as suas URLs corretas)
     const carImage = new Image();
     carImage.src = "carro.png";
 
@@ -69,25 +69,22 @@
 
     let currentLevel = 0;
 
-    // Carros fixos nas vagas — ajustados para ficarem alinhados exatamente nas vagas
+    // Carros fixos nas vagas, todos centralizados corretamente
     const staticParkedCars = [
-      // linha 1 (parte superior)
       { x: 200, y: 100, width: 45, height: 80, angle: 0 },
       { x: 400, y: 100, width: 45, height: 80, angle: 0 },
       { x: 600, y: 100, width: 45, height: 80, angle: 0 },
 
-      // linha 2 (parte do meio)
       { x: 200, y: 250, width: 45, height: 80, angle: 0 },
-      // REMOVIDO: { x: 400, y: 250, width: 45, height: 80, angle: 0 }, // carro removido para passagem
+      // Carro removido daqui para facilitar passagem: { x: 400, y: 250, width: 45, height: 80, angle: 0 }, 
+
       { x: 600, y: 250, width: 45, height: 80, angle: 0 },
 
-      // linha 3 (parte inferior)
       { x: 200, y: 400, width: 45, height: 80, angle: 0 },
       { x: 400, y: 400, width: 45, height: 80, angle: 0 },
       { x: 600, y: 400, width: 45, height: 80, angle: 0 }
     ];
 
-    // Definição dos níveis com vaga ajustada e espaçada para facilitar
     const levels = [
       {
         parkingSpot: { x: 400, y: 250, width: 65, height: 110, angle: 0 }
@@ -96,7 +93,7 @@
         parkingSpot: { x: 700, y: 400, width: 65, height: 110, angle: 0 }
       },
       {
-        parkingSpot: { x: 700, y: 250, width: 80, height: 140, angle: 0 } // espaço maior no nível 3
+        parkingSpot: { x: 700, y: 250, width: 80, height: 140, angle: 0 }
       }
     ];
 
@@ -113,7 +110,6 @@
       ctx.restore();
     }
 
-    // Colisão retangular simples (sem rotação) - mais eficiente para carros fixos
     function rectsCollide(r1, r2) {
       return (
         r1.x < r2.x + r2.width &&
@@ -124,13 +120,11 @@
     }
 
     function update() {
-      // Controles corrigidos: seta cima = acelerar, seta baixo = ré
       if (keys.ArrowUp) {
         playerCar.speed = Math.min(playerCar.speed + playerCar.acceleration, playerCar.maxSpeed);
       } else if (keys.ArrowDown) {
         playerCar.speed = Math.max(playerCar.speed - playerCar.acceleration, -playerCar.maxSpeed / 2);
       } else {
-        // Desacelera naturalmente
         if (playerCar.speed > 0) playerCar.speed = Math.max(playerCar.speed - playerCar.deceleration, 0);
         else if (playerCar.speed < 0) playerCar.speed = Math.min(playerCar.speed + playerCar.deceleration, 0);
       }
@@ -169,7 +163,6 @@
         playerCar.speed = 0;
       }
 
-      // Limites do canvas
       playerCar.x = Math.max(playerCar.width / 2, Math.min(canvas.width - playerCar.width / 2, playerCar.x));
       playerCar.y = Math.max(playerCar.height / 2, Math.min(canvas.height - playerCar.height / 2, playerCar.y));
 
@@ -182,7 +175,6 @@
       ) {
         if (currentLevel < levels.length - 1) {
           currentLevel++;
-          // Manter posição do carro para próximo nível
           playerCar.speed = 0;
         } else {
           successMessage.style.display = 'block';
@@ -193,11 +185,11 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Piso do estacionamento
+      // Piso estacionamento
       ctx.fillStyle = '#2a3a4a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Linhas horizontais do estacionamento
+      // Linhas horizontais estacionamento
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
       for (let y = 50; y < canvas.height; y += 100) {
@@ -207,47 +199,21 @@
         ctx.stroke();
       }
 
-      // Linhas verticais das vagas
+      // Linhas verticais vagas
       for (let x = 150; x <= 650; x += 200) {
         for (let y = 50; y < canvas.height; y += 100) {
           ctx.strokeRect(x, y, 60, 100);
         }
       }
 
-      // Faixa de pedestres ajustada para frente do estacionamento (horizontal)
-      ctx.fillStyle = "white";
-      let faixaY = 460;
-      let faixaStartX = 90;
-      let faixaEndX = 710;
-      let faixaWidth = 20;
-      let faixaSpacing = 15;
-
-      for (let x = faixaStartX; x < faixaEndX; x += faixaWidth + faixaSpacing) {
-        ctx.fillRect(x, faixaY, faixaWidth, 10);
-      }
-
-      // Árvores simples (círculos verdes) ao redor do estacionamento
-      const treePositions = [
-        { x: 80, y: 80 },
-        { x: 80, y: 300 },
-        { x: 80, y: 520 },
-        { x: 730, y: 80 },
-        { x: 730, y: 300 },
-        { x: 730, y: 520 }
-      ];
-      ctx.fillStyle = '#2e7d32';
-      treePositions.forEach(tree => {
-        ctx.beginPath();
-        ctx.arc(tree.x, tree.y, 20, 0, Math.PI * 2);
-        ctx.fill();
-      });
+      // REMOVIDO: faixa de pedestres
 
       // Desenhar carros fixos nas vagas
       staticParkedCars.forEach(car => {
         drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
       });
 
-      // Desenhar vaga do nível atual
+      // Desenhar vaga atual do nível
       const level = levels[currentLevel];
       ctx.setLineDash([6, 8]);
       ctx.strokeStyle = '#4CAF50';
