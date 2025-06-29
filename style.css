@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #444;
+  background: white;
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -8,94 +8,81 @@ body {
   align-items: center;
 }
 
-.stadium {
+.stadium-wrapper {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #aaa; /* cinza da arquibancada */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-/* Estrutura de fundo (tipo o estádio mesmo) */
-.stadium-background {
-  position: absolute;
-  width: 900px;
-  height: 600px;
-  background: #888;
-  border-radius: 20px;
-  box-shadow: 0 0 40px #000;
-  z-index: 0;
-}
-
-/* Telão acima do campo */
-.scoreboard {
-  position: absolute;
-  top: 20px;
-  width: 300px;
-  height: 100px;
-  background: black;
-  border: 5px solid white;
-  z-index: 1;
+  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.scoreboard img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+.stadium {
+  position: relative;
+  width: 800px;
+  height: 500px;
+  background-color: #aaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  z-index: 2;
 }
 
-/* Publicidade nos lados */
-.ads {
-  position: absolute;
-  width: 100px;
-  height: 300px;
-  background: repeating-linear-gradient(
-    45deg,
-    #ff0,
-    #ff0 10px,
-    #f00 10px,
-    #f00 20px
-  );
-  z-index: 1;
-  opacity: 0.8;
-}
-
-.ads.left {
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.ads.right {
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Arquibancadas */
-.fans {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  background-image: url('torcida_pixel.png'); /* Imagem da torcida pixelada */
-  background-repeat: repeat;
-  opacity: 0.2;
-}
-
-/* Canvas */
 canvas {
   background-color: #0a8a0a;
   border: 6px solid #ffffff;
   box-shadow: 0 0 20px black;
   display: block;
-  z-index: 2;
+  z-index: 3;
+}
+
+/* Torcedores ao redor */
+.fans {
+  position: absolute;
+  background-image: url('torcedor2.png');
+
+  background-repeat: repeat;
+  background-size: contain;
+  z-index: 1;
+  opacity: 1;
+}
+
+.fans.top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 60px;
+  background-position: bottom center;
+}
+
+.fans.bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 60px;
+  background-position: top center;
+}
+
+.fans.left {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 500px;
+  background-position: right center;
+}
+
+.fans.right {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 500px;
+  background-position: left center;
 }
 
 /* Tela de reinício */
