@@ -1,84 +1,69 @@
 body {
   margin: 0;
-  background: #888; /* fundo cinza externo */
-  height: 100vh;
+  background: #888; /* fundo cinza */
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
 .estadio {
   position: relative;
-  width: 1000px;
-  height: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 800px;
+  height: 500px;
+  background: white; /* arquibancada */
+  box-shadow: 0 0 20px black;
 }
 
-/* Torcida em volta */
+.gramado {
+  width: 700px;
+  height: 400px;
+  background: #0a8a0a; /* verde do campo */
+  position: relative;
+  z-index: 2;
+  border: 5px solid white;
+}
+
 .torcida {
   position: absolute;
-  background-size: 28px 28px; /* torcedores pequenos */
+  background-size: 32px;
   background-repeat: repeat;
   z-index: 1;
-  image-rendering: pixelated;
 }
 
-/* Usando a imagem com torcida completa alternada */
+.torcida.top,
+.torcida.bottom {
+  height: 96px;
+  left: -96px;
+  right: -96px;
+}
+
+.torcida.left,
+.torcida.right {
+  width: 96px;
+  top: -96px;
+  bottom: -96px;
+}
+
 .torcida.top {
-  top: 0;
-  left: 60px;
-  width: 880px;
-  height: 60px;
-  background-image: url('torcedor2.png');
+  top: -96px;
+  background-image: url('New\ Piskel.png'); /* torcedor azul */
 }
 
 .torcida.bottom {
-  bottom: 0;
-  left: 60px;
-  width: 880px;
-  height: 60px;
-  background-image: url('New\ Piskel.png');
+  bottom: -96px;
+  background-image: url('New\ Piskel.png'); /* torcedor vermelho */
 }
 
 .torcida.left {
-  top: 60px;
-  left: 0;
-  width: 60px;
-  height: 580px;
-  background-image: url('torcedor2.png');
+  left: -96px;
+  background-image: url('torcedor2.png'); /* torcedor vermelho */
 }
 
 .torcida.right {
-  top: 60px;
-  right: 0;
-  width: 60px;
-  height: 580px;
-  background-image: url('New\ Piskel.png');
-}
-
-/* Moldura branca ao redor do campo */
-.estrutura {
-  background: white;
-  width: 880px;
-  height: 580px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-  box-shadow: 0 0 10px black;
-}
-
-/* Campo do jogo */
-.campo {
-  width: 800px;
-  height: 500px;
-  background-color: #0a8a0a;
-  border: 6px solid #ffffff;
-  box-shadow: inset 0 0 10px black;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  right: -96px;
+  background-image: url('torcedor2.png'); /* torcedor azul */
 }
