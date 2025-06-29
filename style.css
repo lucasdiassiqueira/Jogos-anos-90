@@ -1,70 +1,71 @@
 body {
   margin: 0;
   background: white;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .estadio {
   position: relative;
-  width: 960px; /* 800 (campo) + 80 (direita + esquerda) + margem */
-  height: 660px; /* 500 (campo) + 80 (topo + base) + margem */
+  width: 100vw;
+  height: 100vh;
   background: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 30px #888;
+  overflow: hidden;
 }
 
-/* Blocos de torcida nas 4 direções */
+/* Tamanho menor dos torcedores e mais unidades */
 .torcida {
   position: absolute;
-  background-size: contain;
+  background-size: 30px 30px; /* diminui o tamanho */
   background-repeat: repeat;
-  z-index: 1;
   image-rendering: pixelated;
+  z-index: 1;
   opacity: 1;
 }
 
+/* Expande e enche sem cobrir o campo */
 .torcida.top {
   top: 0;
-  left: 80px;
-  width: 800px;
-  height: 80px;
+  left: 0;
+  width: 100%;
+  height: 100px;
   background-image: url('torcedor2.png');
   background-position: bottom;
 }
 
 .torcida.bottom {
   bottom: 0;
-  left: 80px;
-  width: 800px;
-  height: 80px;
+  left: 0;
+  width: 100%;
+  height: 100px;
   background-image: url('New\ Piskel.png');
   background-position: top;
 }
 
 .torcida.left {
-  top: 80px;
+  top: 0;
   left: 0;
-  width: 80px;
-  height: 500px;
-  background-image: url('New\ Piskel.png');
+  width: 100px;
+  height: 100%;
+  background-image: url('torcedor2.png');
   background-position: right;
 }
 
 .torcida.right {
-  top: 80px;
+  top: 0;
   right: 0;
-  width: 80px;
-  height: 500px;
-  background-image: url('torcedor2.png');
+  width: 100px;
+  height: 100%;
+  background-image: url('New\ Piskel.png');
   background-position: left;
 }
 
-/* Campo no centro */
+/* Campo central intacto */
 .campo {
   width: 800px;
   height: 500px;
