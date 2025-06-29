@@ -12,13 +12,84 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #aaa;
+  background-color: #aaa; /* cinza da arquibancada */
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
 
+/* Estrutura de fundo (tipo o estádio mesmo) */
+.stadium-background {
+  position: absolute;
+  width: 900px;
+  height: 600px;
+  background: #888;
+  border-radius: 20px;
+  box-shadow: 0 0 40px #000;
+  z-index: 0;
+}
+
+/* Telão acima do campo */
+.scoreboard {
+  position: absolute;
+  top: 20px;
+  width: 300px;
+  height: 100px;
+  background: black;
+  border: 5px solid white;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scoreboard img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Publicidade nos lados */
+.ads {
+  position: absolute;
+  width: 100px;
+  height: 300px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ff0,
+    #ff0 10px,
+    #f00 10px,
+    #f00 20px
+  );
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.ads.left {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ads.right {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Arquibancadas */
+.fans {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-image: url('torcida_pixel.png'); /* Imagem da torcida pixelada */
+  background-repeat: repeat;
+  opacity: 0.2;
+}
+
+/* Canvas */
 canvas {
   background-color: #0a8a0a;
   border: 6px solid #ffffff;
@@ -27,7 +98,7 @@ canvas {
   z-index: 2;
 }
 
-/* Tela de reinício após o jogo */
+/* Tela de reinício */
 #restartScreen {
   position: absolute;
   width: 800px;
@@ -46,29 +117,4 @@ canvas {
   border-radius: 12px;
   text-align: center;
   padding: 20px;
-}
-
-#restartScreen h1 {
-  font-size: 2rem;
-}
-
-#restartScreen p {
-  margin-top: 10px;
-  font-size: 1.2rem;
-}
-
-#restartScreen button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: white;
-  color: black;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-#restartScreen button:hover {
-  background-color: #ddd;
 }
