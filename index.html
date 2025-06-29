@@ -2,19 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Futebol 2D</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ping Pong Futebol</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="stadium">
     <canvas id="gameCanvas" width="800" height="500"></canvas>
+
     <div id="restartScreen">
-      <h1>Fim de jogo</h1>
-      <p id="winnerText"></p>
+      <h1 id="winnerText"></h1>
+      <p id="scoreText"></p>
       <button onclick="restartGame()">Jogar Novamente</button>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

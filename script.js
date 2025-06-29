@@ -47,14 +47,9 @@ const ball = {
 const player1Img = new Image();
 const player2Img = new Image();
 const ballImg = new Image();
-const torcedor1Img = new Image();
-const torcedor2Img = new Image();
-
-torcedor1Img.src = 'New Piskel.png';
-torcedor2Img.src = 'torcedor2.png';
 
 let imagesLoaded = 0;
-const totalImages = 5;
+const totalImages = 3;
 
 function checkAllLoaded() {
   imagesLoaded++;
@@ -70,8 +65,6 @@ ballImg.src = 'bola.png';
 player1Img.onload = checkAllLoaded;
 player2Img.onload = checkAllLoaded;
 ballImg.onload = checkAllLoaded;
-torcedor1Img.onload = checkAllLoaded;
-torcedor2Img.onload = checkAllLoaded;
 
 function startGame() {
   player1.img = player1Img;
@@ -153,9 +146,6 @@ function moveBall() {
 function drawField() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Torcedores em volta (parte visual fixa)
-  drawFans();
-
   ctx.strokeStyle = "white";
   ctx.lineWidth = 10;
   ctx.setLineDash([20, 20]);
@@ -209,37 +199,6 @@ function drawGoals() {
     ctx.stroke();
   }
 }
-
-function drawFans() {
-  const spacing = 35;
-  let toggle = true;
-  const fanSize = 30;
-
-  // Topo (fora do campo)
-  for (let x = -60; x < canvas.width + 60; x += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, -70, fanSize, fanSize);
-    toggle = !toggle;
-  }
-
-  // Baixo (fora do campo)
-  for (let x = -60; x < canvas.width + 60; x += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, x, canvas.height + 40, fanSize, fanSize);
-    toggle = !toggle;
-  }
-
-  // Esquerda (fora do campo)
-  for (let y = -60; y < canvas.height + 60; y += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, -70, y, fanSize, fanSize);
-    toggle = !toggle;
-  }
-
-  // Direita (fora do campo)
-  for (let y = -60; y < canvas.height + 60; y += spacing) {
-    ctx.drawImage(toggle ? torcedor1Img : torcedor2Img, canvas.width + 40, y, fanSize, fanSize);
-    toggle = !toggle;
-  }
-}
-
 
 function draw() {
   drawField();
