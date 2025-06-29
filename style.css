@@ -1,107 +1,78 @@
 body {
   margin: 0;
   background: white;
-  height: 100vh;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-.stadium-wrapper {
+.estadio {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 960px; /* 800 (campo) + 80 (direita + esquerda) + margem */
+  height: 660px; /* 500 (campo) + 80 (topo + base) + margem */
   background: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 30px #888;
 }
 
-.stadium {
-  position: relative;
-  width: 800px;
-  height: 500px;
-  background-color: #aaa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-  z-index: 2;
-}
-
-canvas {
-  background-color: #0a8a0a;
-  border: 6px solid #ffffff;
-  box-shadow: 0 0 20px black;
-  display: block;
-  z-index: 3;
-}
-
-/* Torcedores ao redor */
-.fans {
+/* Blocos de torcida nas 4 direções */
+.torcida {
   position: absolute;
-  background-image: url('torcedor2.png');
-
-  background-repeat: repeat;
   background-size: contain;
+  background-repeat: repeat;
   z-index: 1;
+  image-rendering: pixelated;
   opacity: 1;
 }
 
-.fans.top {
+.torcida.top {
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 80px;
   width: 800px;
-  height: 60px;
-  background-position: bottom center;
+  height: 80px;
+  background-image: url('torcedor2.png');
+  background-position: bottom;
 }
 
-.fans.bottom {
+.torcida.bottom {
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 80px;
   width: 800px;
-  height: 60px;
-  background-position: top center;
+  height: 80px;
+  background-image: url('New\ Piskel.png');
+  background-position: top;
 }
 
-.fans.left {
+.torcida.left {
+  top: 80px;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
+  width: 80px;
   height: 500px;
-  background-position: right center;
+  background-image: url('New\ Piskel.png');
+  background-position: right;
 }
 
-.fans.right {
+.torcida.right {
+  top: 80px;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
+  width: 80px;
   height: 500px;
-  background-position: left center;
+  background-image: url('torcedor2.png');
+  background-position: left;
 }
 
-/* Tela de reinício */
-#restartScreen {
-  position: absolute;
+/* Campo no centro */
+.campo {
   width: 800px;
   height: 500px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  display: none;
+  background-color: #0a8a0a;
+  border: 6px solid #ffffff;
+  box-shadow: 0 0 10px black;
+  z-index: 2;
+  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
-  z-index: 10;
-  border-radius: 12px;
-  text-align: center;
-  padding: 20px;
 }

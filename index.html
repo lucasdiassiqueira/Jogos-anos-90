@@ -1,22 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estádio com Torcida</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
-  <div class="stadium-wrapper">
-    <!-- Torcida (ao redor do campo) -->
-    <div class="fans top"></div>
-    <div class="fans bottom"></div>
-    <div class="fans left"></div>
-    <div class="fans right"></div>
+  <div class="estadio">
+    <!-- Torcida ao redor -->
+    <div class="torcida top"></div>
+    <div class="torcida bottom"></div>
+    <div class="torcida left"></div>
+    <div class="torcida right"></div>
 
-    <!-- Campo e jogo -->
-    <div class="stadium">
+    <!-- Espaço para o campo -->
+    <div class="campo">
       <canvas id="gameCanvas" width="800" height="500"></canvas>
-
-      <div id="restartScreen">
-        <h1 id="winnerText"></h1>
-        <p id="scoreText"></p>
-        <button onclick="restartGame()">Jogar Novamente</button>
-      </div>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
+</html>
