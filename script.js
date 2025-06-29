@@ -50,7 +50,7 @@ const ballImg = new Image();
 const torcedor1Img = new Image();
 const torcedor2Img = new Image();
 
-torcedor1Img.src = 'torcedor.png';
+torcedor1Img.src = 'New Piskel.png';
 torcedor2Img.src = 'torcedor2.png';
 
 let imagesLoaded = 0;
