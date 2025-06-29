@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jogo de Estacionar</title>
   <style>
     body {
@@ -61,30 +61,36 @@
     let currentLevel = 0;
 
     const staticParkedCars = [
-      // LINHA 1
-      { x: 180, y: 100, width: 45, height: 80, angle: 0 },
-      { x: 380, y: 100, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 100, width: 45, height: 80, angle: 0 },
-      // LINHA 2
-      { x: 180, y: 200, width: 45, height: 80, angle: 0 },
-      { x: 380, y: 200, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 200, width: 45, height: 80, angle: 0 },
-      // LINHA 3 (inferior) — retiramos um carro
-      { x: 380, y: 300, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 300, width: 45, height: 80, angle: 0 },
-      // LINHA 4 — carros de lado no canto direito
-      { x: 740, y: 100, width: 80, height: 45, angle: Math.PI / 2 },
-      { x: 740, y: 200, width: 80, height: 45, angle: Math.PI / 2 },
-      { x: 740, y: 300, width: 80, height: 45, angle: Math.PI / 2 }
+      // Primeira linha (acima)
+      { x: 180, y: 50, width: 45, height: 80, angle: 0 },
+      { x: 380, y: 50, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 50, width: 45, height: 80, angle: 0 },
+
+      // Segunda linha
+      { x: 180, y: 150, width: 45, height: 80, angle: 0 },
+      { x: 380, y: 150, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 150, width: 45, height: 80, angle: 0 },
+
+      // Terceira linha
+      { x: 180, y: 250, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 250, width: 45, height: 80, angle: 0 },
+
+      // Quarta linha (embaixo)
+      { x: 380, y: 350, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 350, width: 45, height: 80, angle: 0 }
     ];
 
     const levels = [
-      { parkingSpot: { x: 280, y: 300, width: 60, height: 100, angle: 0 } },
-      { parkingSpot: { x: 740, y: 150, width: 100, height: 60, angle: Math.PI / 2 } },
-      { parkingSpot: { x: 480, y: 200, width: 60, height: 100, angle: 0 } }
+      {
+        parkingSpot: { x: 380, y: 250, width: 60, height: 100, angle: 0 }
+      },
+      {
+        parkingSpot: { x: 180, y: 350, width: 60, height: 100, angle: 0 }
+      }
     ];
 
     const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+
     document.addEventListener('keydown', e => { if (keys.hasOwnProperty(e.key)) keys[e.key] = true; });
     document.addEventListener('keyup', e => { if (keys.hasOwnProperty(e.key)) keys[e.key] = false; });
 
@@ -148,6 +154,9 @@
         playerCar.speed = 0;
       }
 
+      playerCar.x = Math.max(playerCar.width / 2, Math.min(canvas.width - playerCar.width / 2, playerCar.x));
+      playerCar.y = Math.max(playerCar.height / 2, Math.min(canvas.height - playerCar.height / 2, playerCar.y));
+
       const level = levels[currentLevel];
       if (
         Math.abs(playerCar.x - level.parkingSpot.x) < 20 &&
@@ -159,34 +168,31 @@
           currentLevel++;
           resetGame();
         } else {
-          successMessage.style.display = "block";
+          successMessage.style.display = 'block';
         }
       }
     }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#2a3a4a";
+      ctx.fillStyle = '#2a3a4a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = "#ffffff";
+      ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
 
-      for (let y = 50; y < canvas.height; y += 100) {
-        for (let x = 150; x <= 600; x += 200) {
-          ctx.strokeRect(x - 30, y - 50, 60, 100); // ajustado pra centralizar
+      for (let y = 0; y < canvas.height; y += 100) {
+        for (let x = 150; x < canvas.width; x += 200) {
+          ctx.strokeRect(x, y + 10, 60, 100);
         }
       }
 
-      // Desenhar carros fixos
       staticParkedCars.forEach(car => {
         drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
       });
 
-      // Vaga do nível atual
       const level = levels[currentLevel];
       ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = "#4CAF50";
+      ctx.strokeStyle = '#4CAF50';
       ctx.strokeRect(
         level.parkingSpot.x - level.parkingSpot.width / 2,
         level.parkingSpot.y - level.parkingSpot.height / 2,
@@ -195,7 +201,6 @@
       );
       ctx.setLineDash([]);
 
-      // Carro do jogador
       drawRotatedImage(carImage, playerCar.x, playerCar.y, playerCar.width, playerCar.height, playerCar.angle);
     }
 
