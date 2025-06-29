@@ -2,8 +2,8 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jogo de Estacionar Ajustado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Estacionar</title>
   <style>
     body {
       margin: 0;
@@ -13,15 +13,15 @@
       align-items: center;
       background-color: #f0f0f0;
       height: 100vh;
-      overflow: hidden;
     }
+
     #gameCanvas {
       background-color: #1a3a6e;
       border-radius: 8px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       border: 3px solid #2a4a7e;
-      display: block;
     }
+
     #success-message {
       position: absolute;
       top: 50%;
@@ -39,7 +39,7 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="900" height="550"></canvas>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
   <div id="success-message">Parabéns! Você completou todos os níveis!</div>
 
   <script>
@@ -47,7 +47,6 @@
     const ctx = canvas.getContext("2d");
     const successMessage = document.getElementById("success-message");
 
-    // Imagens (troque para as suas URLs corretas)
     const carImage = new Image();
     carImage.src = "carro.png";
 
@@ -55,42 +54,40 @@
     parkedCarImage.src = "carro2.png";
 
     const playerCar = {
-      x: 100,
-      y: 250,
-      width: 45,
-      height: 80,
-      angle: 0,
-      speed: 0,
-      maxSpeed: 3,
-      acceleration: 0.05,
-      deceleration: 0.02,
-      turnSpeed: 0.03
+      x: 100, y: 250, width: 45, height: 80,
+      angle: 0, speed: 0,
+      maxSpeed: 3, acceleration: 0.05, deceleration: 0.02, turnSpeed: 0.03
     };
 
     let currentLevel = 0;
 
-    // Carros fixos nas vagas, todos centralizados corretamente
     const staticParkedCars = [
-      { x: 200, y: 100, width: 45, height: 80, angle: 0 },
-      { x: 400, y: 100, width: 45, height: 80, angle: 0 },
-      { x: 600, y: 100, width: 45, height: 80, angle: 0 },
+      // Linha 1
+      { x: 180, y: 100, width: 45, height: 80, angle: 0 },
+      { x: 380, y: 100, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 100, width: 45, height: 80, angle: 0 },
 
-      { x: 200, y: 250, width: 45, height: 80, angle: 0 },
-      // Carro removido daqui para facilitar passagem: { x: 400, y: 250, width: 45, height: 80, angle: 0 }, 
+      // Linha 2 (meio removido)
+      { x: 180, y: 250, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 250, width: 45, height: 80, angle: 0 },
 
-      { x: 600, y: 250, width: 45, height: 80, angle: 0 },
+      // Linha 3
+      { x: 180, y: 400, width: 45, height: 80, angle: 0 },
+      { x: 380, y: 400, width: 45, height: 80, angle: 0 },
+      { x: 580, y: 400, width: 45, height: 80, angle: 0 },
 
-      { x: 200, y: 400, width: 45, height: 80, angle: 0 },
-      { x: 400, y: 400, width: 45, height: 80, angle: 0 },
-      { x: 600, y: 400, width: 45, height: 80, angle: 0 }
+      // Linha 4 (carros de lado)
+      { x: 150, y: 520, width: 80, height: 45, angle: Math.PI / 2 },
+      { x: 350, y: 520, width: 80, height: 45, angle: Math.PI / 2 },
+      { x: 550, y: 520, width: 80, height: 45, angle: Math.PI / 2 }
     ];
 
     const levels = [
       {
-        parkingSpot: { x: 400, y: 250, width: 65, height: 110, angle: 0 }
+        parkingSpot: { x: 380, y: 250, width: 65, height: 110, angle: 0 }
       },
       {
-        parkingSpot: { x: 700, y: 400, width: 65, height: 110, angle: 0 }
+        parkingSpot: { x: 350, y: 520, width: 110, height: 65, angle: Math.PI / 2 }
       },
       {
         parkingSpot: { x: 700, y: 250, width: 80, height: 140, angle: 0 }
@@ -125,8 +122,7 @@
       } else if (keys.ArrowDown) {
         playerCar.speed = Math.max(playerCar.speed - playerCar.acceleration, -playerCar.maxSpeed / 2);
       } else {
-        if (playerCar.speed > 0) playerCar.speed = Math.max(playerCar.speed - playerCar.deceleration, 0);
-        else if (playerCar.speed < 0) playerCar.speed = Math.min(playerCar.speed + playerCar.deceleration, 0);
+        playerCar.speed *= 0.98;
       }
 
       if (keys.ArrowLeft) playerCar.angle -= playerCar.turnSpeed * playerCar.speed;
@@ -168,14 +164,14 @@
 
       const level = levels[currentLevel];
       if (
-        Math.abs(playerCar.x - level.parkingSpot.x) < 25 &&
-        Math.abs(playerCar.y - level.parkingSpot.y) < 25 &&
+        Math.abs(playerCar.x - level.parkingSpot.x) < 20 &&
+        Math.abs(playerCar.y - level.parkingSpot.y) < 20 &&
         Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
         Math.abs(playerCar.speed) < 0.1
       ) {
         if (currentLevel < levels.length - 1) {
           currentLevel++;
-          playerCar.speed = 0;
+          resetGame();
         } else {
           successMessage.style.display = 'block';
         }
@@ -184,40 +180,27 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Piso estacionamento
       ctx.fillStyle = '#2a3a4a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Linhas horizontais estacionamento
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
-      for (let y = 50; y < canvas.height; y += 100) {
-        ctx.beginPath();
-        ctx.moveTo(100, y);
-        ctx.lineTo(canvas.width - 100, y);
-        ctx.stroke();
-      }
 
-      // Linhas verticais vagas
-      for (let x = 150; x <= 650; x += 200) {
-        for (let y = 50; y < canvas.height; y += 100) {
+      // Desenhar vagas
+      for (let y = 50; y < canvas.height; y += 150) {
+        for (let x = 150; x < canvas.width - 100; x += 200) {
           ctx.strokeRect(x, y, 60, 100);
         }
       }
 
-      // REMOVIDO: faixa de pedestres
-
-      // Desenhar carros fixos nas vagas
+      // Carros fixos
       staticParkedCars.forEach(car => {
         drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
       });
 
-      // Desenhar vaga atual do nível
+      // Vaga do nível
       const level = levels[currentLevel];
-      ctx.setLineDash([6, 8]);
+      ctx.setLineDash([5, 5]);
       ctx.strokeStyle = '#4CAF50';
-      ctx.lineWidth = 4;
       ctx.strokeRect(
         level.parkingSpot.x - level.parkingSpot.width / 2,
         level.parkingSpot.y - level.parkingSpot.height / 2,
@@ -234,6 +217,10 @@
       update();
       draw();
       requestAnimationFrame(gameLoop);
+    }
+
+    function resetGame() {
+      playerCar.speed = 0;
     }
 
     carImage.onload = () => parkedCarImage.onload = () => gameLoop();
