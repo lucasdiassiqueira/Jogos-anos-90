@@ -13,13 +13,14 @@
       align-items: center;
       background-color: #f0f0f0;
       height: 100vh;
+      font-family: sans-serif;
     }
 
     #gameCanvas {
       background-color: #1a3a6e;
       border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       border: 3px solid #2a4a7e;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
     #success-message {
@@ -27,20 +28,39 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 30px;
-      border-radius: 10px;
-      font-size: 24px;
-      display: none;
+      background-color: #ffffff;
+      color: #333;
+      padding: 40px;
+      border-radius: 12px;
       text-align: center;
-      z-index: 1;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 2;
+    }
+
+    #success-message button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #success-message button:hover {
+      background-color: #3e8e41;
     }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas" width="800" height="500"></canvas>
-  <div id="success-message">Parabéns! Você completou todos os níveis!</div>
+  <div id="success-message">
+    <h2>Parabéns!</h2>
+    <p>Você completou todos os níveis!</p>
+    <button onclick="restartGame()">Recomeçar</button>
+  </div>
 
   <script>
     const canvas = document.getElementById("gameCanvas");
@@ -49,6 +69,7 @@
 
     const carImage = new Image();
     carImage.src = "carro.png";
+
     const parkedCarImage = new Image();
     parkedCarImage.src = "carro2.png";
 
@@ -61,31 +82,32 @@
     let currentLevel = 0;
 
     const staticParkedCars = [
-      // Primeira linha (acima)
-      { x: 180, y: 50, width: 45, height: 80, angle: 0 },
-      { x: 380, y: 50, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 50, width: 45, height: 80, angle: 0 },
-
+      // Primeira linha
+      { x: 150 + 30, y: 50 + 50, width: 45, height: 80 },
+      { x: 350 + 30, y: 50 + 50, width: 45, height: 80 },
       // Segunda linha
-      { x: 180, y: 150, width: 45, height: 80, angle: 0 },
-      { x: 380, y: 150, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 150, width: 45, height: 80, angle: 0 },
-
+      { x: 150 + 30, y: 150 + 50, width: 45, height: 80 },
+      { x: 350 + 30, y: 150 + 50, width: 45, height: 80 },
+      { x: 550 + 30, y: 150 + 50, width: 45, height: 80 },
       // Terceira linha
-      { x: 180, y: 250, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 250, width: 45, height: 80, angle: 0 },
-
-      // Quarta linha (embaixo)
-      { x: 380, y: 350, width: 45, height: 80, angle: 0 },
-      { x: 580, y: 350, width: 45, height: 80, angle: 0 }
+      { x: 150 + 30, y: 250 + 50, width: 45, height: 80 },
+      { x: 350 + 30, y: 250 + 50, width: 45, height: 80 },
+      { x: 550 + 30, y: 250 + 50, width: 45, height: 80 },
+      // Quarta linha (canto direito)
+      { x: 650 + 30, y: 50 + 50, width: 45, height: 80 },
+      { x: 650 + 30, y: 150 + 50, width: 45, height: 80 },
+      { x: 650 + 30, y: 250 + 50, width: 45, height: 80 }
     ];
 
     const levels = [
       {
-        parkingSpot: { x: 380, y: 250, width: 60, height: 100, angle: 0 }
+        parkingSpot: { x: 550 + 30, y: 50 + 50, width: 60, height: 100 }
       },
       {
-        parkingSpot: { x: 180, y: 350, width: 60, height: 100, angle: 0 }
+        parkingSpot: { x: 650 + 30, y: 350, width: 60, height: 100 }
+      },
+      {
+        parkingSpot: { x: 350 + 30, y: 350, width: 60, height: 100 }
       }
     ];
 
@@ -94,7 +116,7 @@
     document.addEventListener('keydown', e => { if (keys.hasOwnProperty(e.key)) keys[e.key] = true; });
     document.addEventListener('keyup', e => { if (keys.hasOwnProperty(e.key)) keys[e.key] = false; });
 
-    function drawRotatedImage(img, x, y, width, height, angle) {
+    function drawRotatedImage(img, x, y, width, height, angle = 0) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
@@ -112,13 +134,9 @@
     }
 
     function update() {
-      if (keys.ArrowUp) {
-        playerCar.speed = Math.min(playerCar.speed + playerCar.acceleration, playerCar.maxSpeed);
-      } else if (keys.ArrowDown) {
-        playerCar.speed = Math.max(playerCar.speed - playerCar.acceleration, -playerCar.maxSpeed / 2);
-      } else {
-        playerCar.speed *= 0.98;
-      }
+      if (keys.ArrowUp) playerCar.speed = Math.min(playerCar.speed + playerCar.acceleration, playerCar.maxSpeed);
+      else if (keys.ArrowDown) playerCar.speed = Math.max(playerCar.speed - playerCar.acceleration, -playerCar.maxSpeed / 2);
+      else playerCar.speed *= 0.98;
 
       if (keys.ArrowLeft) playerCar.angle -= playerCar.turnSpeed * playerCar.speed;
       if (keys.ArrowRight) playerCar.angle += playerCar.turnSpeed * playerCar.speed;
@@ -154,21 +172,17 @@
         playerCar.speed = 0;
       }
 
-      playerCar.x = Math.max(playerCar.width / 2, Math.min(canvas.width - playerCar.width / 2, playerCar.x));
-      playerCar.y = Math.max(playerCar.height / 2, Math.min(canvas.height - playerCar.height / 2, playerCar.y));
-
       const level = levels[currentLevel];
       if (
         Math.abs(playerCar.x - level.parkingSpot.x) < 20 &&
         Math.abs(playerCar.y - level.parkingSpot.y) < 20 &&
-        Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
         Math.abs(playerCar.speed) < 0.1
       ) {
         if (currentLevel < levels.length - 1) {
           currentLevel++;
           resetGame();
         } else {
-          successMessage.style.display = 'block';
+          successMessage.style.display = "block";
         }
       }
     }
@@ -177,30 +191,29 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#2a3a4a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
 
-      for (let y = 0; y < canvas.height; y += 100) {
+      // Vagas
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      for (let y = 50; y < canvas.height; y += 100) {
         for (let x = 150; x < canvas.width; x += 200) {
-          ctx.strokeRect(x, y + 10, 60, 100);
+          ctx.strokeRect(x, y, 60, 100);
         }
       }
 
+      // Carros nas vagas
       staticParkedCars.forEach(car => {
-        drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
+        drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height);
       });
 
+      // Vaga do nível
       const level = levels[currentLevel];
       ctx.setLineDash([5, 5]);
       ctx.strokeStyle = '#4CAF50';
-      ctx.strokeRect(
-        level.parkingSpot.x - level.parkingSpot.width / 2,
-        level.parkingSpot.y - level.parkingSpot.height / 2,
-        level.parkingSpot.width,
-        level.parkingSpot.height
-      );
+      ctx.strokeRect(level.parkingSpot.x - 30, level.parkingSpot.y - 50, 60, 100);
       ctx.setLineDash([]);
 
+      // Jogador
       drawRotatedImage(carImage, playerCar.x, playerCar.y, playerCar.width, playerCar.height, playerCar.angle);
     }
 
@@ -211,6 +224,15 @@
     }
 
     function resetGame() {
+      playerCar.speed = 0;
+    }
+
+    function restartGame() {
+      successMessage.style.display = "none";
+      currentLevel = 0;
+      playerCar.x = 100;
+      playerCar.y = 250;
+      playerCar.angle = 0;
       playerCar.speed = 0;
     }
 
