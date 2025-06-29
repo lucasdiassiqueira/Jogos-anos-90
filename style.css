@@ -50,20 +50,20 @@ body {
 
 .torcida.top {
   top: -96px;
-  background-image: url('48273aad-51e5-4509-ad0d-2af3f1a87155.png'); /* torcedor azul */
+  background-image: url('torcedor2.png'); /* torcedor azul */
 }
 
 .torcida.bottom {
   bottom: -96px;
-  background-image: url('83850869-1924-46dc-abc3-db645eec41d2.png'); /* torcedor vermelho */
+  background-image: url('torcedor2.png'); /* torcedor vermelho */
 }
 
 .torcida.left {
   left: -96px;
-  background-image: url('83850869-1924-46dc-abc3-db645eec41d2.png'); /* torcedor vermelho */
+  background-image: url('torcedor2.png'); /* torcedor vermelho */
 }
 
 .torcida.right {
   right: -96px;
-  background-image: url('48273aad-51e5-4509-ad0d-2af3f1a87155.png'); /* torcedor azul */
+  background-image: url('torcedor2.png'); /* torcedor azul */
 }
