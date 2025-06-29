@@ -1,69 +1,99 @@
 body {
   margin: 0;
-  background: #888; /* fundo cinza */
+  background: #888;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.estadio {
-  position: relative;
+.stadium {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 800px;
-  height: 500px;
-  background: white; /* arquibancada */
-  box-shadow: 0 0 20px black;
+  gap: 4px;
 }
 
-.gramado {
-  width: 700px;
-  height: 400px;
-  background: #0a8a0a; /* verde do campo */
+.middle {
+  display: flex;
+}
+
+.field {
   position: relative;
-  z-index: 2;
-  border: 5px solid white;
+  width: 600px;
+  height: 400px;
+  background-color: #0b9d2a;
+  border: 8px solid black;
+  box-sizing: border-box;
 }
 
-.torcida {
+/* marcações brancas */
+.center-line {
   position: absolute;
-  background-size: 32px;
-  background-repeat: repeat;
-  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: white;
+  transform: translateX(-50%);
 }
 
-.torcida.top,
-.torcida.bottom {
-  height: 96px;
-  left: -96px;
-  right: -96px;
+.circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border: 2px solid white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.torcida.left,
-.torcida.right {
-  width: 96px;
-  top: -96px;
-  bottom: -96px;
+.goal-area {
+  position: absolute;
+  top: 120px;
+  width: 60px;
+  height: 160px;
+  border: 2px solid white;
 }
 
-.torcida.top {
-  top: -96px;
-  background-image: url('torcedor2.png'); /* torcedor azul */
+.goal-area.left {
+  left: 0;
+  border-right: none;
 }
 
-.torcida.bottom {
-  bottom: -96px;
-  background-image: url('torcedor2.png'); /* torcedor vermelho */
+.goal-area.right {
+  right: 0;
+  border-left: none;
 }
 
-.torcida.left {
-  left: -96px;
-  background-image: url('torcedor2.png'); /* torcedor vermelho */
+/* torcida */
+.fans {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
 }
 
-.torcida.right {
-  right: -96px;
-  background-image: url('torcedor2.png'); /* torcedor azul */
+.fans.left,
+.fans.right {
+  flex-direction: column;
+}
+
+.fans.top,
+.fans.bottom {
+  width: 600px;
+  height: 48px;
+}
+
+.fans.left,
+.fans.right {
+  width: 48px;
+  height: 400px;
+}
+
+.fan {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
 }
