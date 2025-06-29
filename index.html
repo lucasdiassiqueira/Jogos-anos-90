@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Estádio com Torcida</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="estadio">
-    <div class="torcida top"></div>
-    <div class="torcida bottom"></div>
-    <div class="torcida left"></div>
-    <div class="torcida right"></div>
-
-    <div class="gramado">
-      <!-- Aqui vai seu canvas do jogo -->
-      <!-- <canvas id="gameCanvas" width="700" height="400"></canvas> -->
+  <div class="stadium">
+    <div class="crowd" id="crowd"></div>
+    <div class="field-container">
+      <div class="field"></div>
     </div>
   </div>
+
+  <script>
+    const crowd = document.getElementById("crowd");
+    const torcedores = ["New Piskel.png", "torcedor2.png"];
+
+    for (let i = 0; i < 500; i++) {
+      const img = document.createElement("img");
+      img.src = torcedores[Math.floor(Math.random() * torcedores.length)];
+      img.className = "fan";
+      img.style.left = `${Math.random() * 100}%`;
+      img.style.top = `${Math.random() * 100}%`;
+      img.style.transform = `translate(-50%, -50%) scale(${Math.random() * 0.5 + 0.4})`;
+      crowd.appendChild(img);
+    }
+  </script>
 </body>
 </html>
