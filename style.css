@@ -1,21 +1,18 @@
 body {
   margin: 0;
   background: #888; /* fundo cinza */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  overflow: hidden;
 }
 
 .estadio {
   position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #888;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 800px;
-  height: 500px;
-  background: white; /* arquibancada */
-  box-shadow: 0 0 20px black;
 }
 
 .gramado {
@@ -25,6 +22,7 @@ body {
   position: relative;
   z-index: 2;
   border: 5px solid white;
+  box-shadow: 0 0 20px black;
 }
 
 .torcida {
@@ -37,33 +35,33 @@ body {
 .torcida.top,
 .torcida.bottom {
   height: 96px;
-  left: -96px;
-  right: -96px;
+  width: 100vw;
+  left: 0;
 }
 
 .torcida.left,
 .torcida.right {
   width: 96px;
-  top: -96px;
-  bottom: -96px;
+  height: 100vh;
+  top: 0;
 }
 
 .torcida.top {
-  top: -96px;
-  background-image: url('48273aad-51e5-4509-ad0d-2af3f1a87155.png'); /* torcedor azul */
+  top: 0;
+  background-image: url('torcedor.png'); /* azul */
 }
 
 .torcida.bottom {
-  bottom: -96px;
-  background-image: url('83850869-1924-46dc-abc3-db645eec41d2.png'); /* torcedor vermelho */
+  bottom: 0;
+  background-image: url('torcedor2.png'); /* vermelho */
 }
 
 .torcida.left {
-  left: -96px;
-  background-image: url('83850869-1924-46dc-abc3-db645eec41d2.png'); /* torcedor vermelho */
+  left: 0;
+  background-image: url('torcedor2.png'); /* vermelho */
 }
 
 .torcida.right {
-  right: -96px;
-  background-image: url('48273aad-51e5-4509-ad0d-2af3f1a87155.png'); /* torcedor azul */
+  right: 0;
+  background-image: url('torcedor2.png'); /* azul */
 }
