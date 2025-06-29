@@ -9,22 +9,31 @@
 <body>
   <div class="stadium">
     <div class="crowd" id="crowd"></div>
+
     <div class="field-container">
-      <div class="field"></div>
+      <div class="field">
+        <!-- aqui dentro você pode desenhar o campo com canvas ou linhas se quiser -->
+      </div>
     </div>
   </div>
 
   <script>
     const crowd = document.getElementById("crowd");
-    const torcedores = ["New Piskel.png", "torcedor2.png"];
+    const torcedores = ["torcedor1.png", "torcedor2.png"];
 
     for (let i = 0; i < 500; i++) {
       const img = document.createElement("img");
       img.src = torcedores[Math.floor(Math.random() * torcedores.length)];
       img.className = "fan";
-      img.style.left = `${Math.random() * 100}%`;
-      img.style.top = `${Math.random() * 100}%`;
-      img.style.transform = `translate(-50%, -50%) scale(${Math.random() * 0.5 + 0.4})`;
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+
+      // Evita que apareçam no campo (centro 70% largura e 70% altura)
+      if (left > 15 && left < 85 && top > 15 && top < 85) continue;
+
+      img.style.left = `${left}%`;
+      img.style.top = `${top}%`;
+      img.style.transform = `translate(-50%, -50%) scale(${Math.random() * 0.3 + 0.3})`;
       crowd.appendChild(img);
     }
   </script>

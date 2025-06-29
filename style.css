@@ -9,6 +9,22 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+.crowd {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.fan {
+  position: absolute;
+  width: 28px;
+  pointer-events: none;
 }
 
 .field-container {
@@ -19,11 +35,11 @@ body {
   height: 80vh;
   transform: translate(-50%, -50%);
   background: white;
-  box-shadow: 0 0 20px black;
+  box-shadow: 0 0 25px black;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
 }
 
 .field {
@@ -31,19 +47,4 @@ body {
   height: 90%;
   background-color: green;
   box-shadow: inset 0 0 20px #000;
-}
-
-.crowd {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.fan {
-  position: absolute;
-  width: 30px;
-  pointer-events: none;
 }
