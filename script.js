@@ -140,7 +140,7 @@ for (let y = 100; y <= 400; y += 100) {
     drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
   });
 
-  const level = levels[currentLevel];
+   const level = levels[currentLevel];
   ctx.setLineDash([5, 5]);
   ctx.strokeStyle = '#4CAF50';
   ctx.strokeRect(
@@ -149,8 +149,8 @@ for (let y = 100; y <= 400; y += 100) {
     level.parkingSpot.width,
     level.parkingSpot.height
   );
-  ctx.setLineDash([]);
-
+  ctx.setLineDash([]); // Reseta para linha sólida
+  
   drawRotatedImage(carImage, playerCar.x, playerCar.y, playerCar.width, playerCar.height, playerCar.angle);
 }
 
