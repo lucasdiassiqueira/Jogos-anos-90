@@ -16,19 +16,19 @@ const playerCar = {
 let currentLevel = 0;
 
 const staticParkedCars = [
-  // LINHA 1 (removido 1 carro)
+  
   { x: 380, y: 100, width: 45, height: 80, angle: 0 },
   { x: 580, y: 100, width: 45, height: 80, angle: 0 },
   // LINHA 2
   { x: 180, y: 200, width: 45, height: 80, angle: 0 },
   { x: 580, y: 200, width: 45, height: 80, angle: 0 },
-  // LINHA 3 (removido 1 carro)
+  // LINHA 3 
   { x: 180, y: 300, width: 45, height: 80, angle: 0 },
   // LINHA 4
   { x: 180, y: 400, width: 45, height: 80, angle: 0 },
   { x: 380, y: 400, width: 45, height: 80, angle: 0 },
   { x: 580, y: 400, width: 45, height: 80, angle: 0 },
-  // CANTO DIREITO (repostas as vagas)
+  // CANTO DIREITO 
   { x: 750, y: 100, width: 45, height: 80, angle: 0 },
   { x: 750, y: 300, width: 45, height: 80, angle: 0 }
 ];
@@ -105,21 +105,6 @@ function update() {
 
   playerCar.x = Math.max(playerCar.width / 2, Math.min(canvas.width - playerCar.width / 2, playerCar.x));
   playerCar.y = Math.max(playerCar.height / 2, Math.min(canvas.height - playerCar.height / 2, playerCar.y));
-
-  const level = levels[currentLevel];
-  if (
-    Math.abs(playerCar.x - level.parkingSpot.x) < 20 &&
-    Math.abs(playerCar.y - level.parkingSpot.y) < 20 &&
-    Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
-    Math.abs(playerCar.speed) < 0.1
-  ) {
-    if (currentLevel < levels.length - 1) {
-      currentLevel++;
-      resetGame();
-    } else {
-      successMessage.style.display = 'block';
-    }
-  }
 }
 
 function draw() {
@@ -130,30 +115,40 @@ function draw() {
   ctx.lineWidth = 2;
 
   const vagaXs = [180, 380, 580, 750]; // incluindo o canto direito
-for (let y = 100; y <= 400; y += 100) {
-  for (let x of vagaXs) {
-    ctx.strokeRect(x - 30, y - 50, 60, 100);
+  for (let y = 100; y <= 400; y += 100) {
+    for (let x of vagaXs) {
+      ctx.strokeRect(x - 30, y - 50, 60, 100);
+    }
   }
-}
 
   staticParkedCars.forEach(car => {
     drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
   });
 
-   const level = levels[currentLevel];
-if (
-  Math.abs(playerCar.x - level.parkingSpot.x) < 40 &&  
-  Math.abs(playerCar.y - level.parkingSpot.y) < 40 &&  
-  Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
-  Math.abs(playerCar.speed) < 0.1
-) {
-  if (currentLevel < levels.length - 1) {
-    currentLevel++;
-    resetGame();
-  } else {
-    successMessage.style.display = 'block';
+  const level = levels[currentLevel];
+  ctx.setLineDash([5, 5]);
+  ctx.strokeStyle = '#4CAF50';
+  ctx.strokeRect(
+    level.parkingSpot.x - level.parkingSpot.width / 2,
+    level.parkingSpot.y - level.parkingSpot.height / 2,
+    level.parkingSpot.width,
+    level.parkingSpot.height
+  );
+  ctx.setLineDash([]);
+
+  if (
+    Math.abs(playerCar.x - level.parkingSpot.x) < 50 &&
+    Math.abs(playerCar.y - level.parkingSpot.y) < 50 &&
+    Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
+    Math.abs(playerCar.speed) < 0.1
+  ) {
+    if (currentLevel < levels.length - 1) {
+      currentLevel++;
+      resetGame();
+    } else {
+      successMessage.style.display = 'block';
+    }
   }
-}
 
   drawRotatedImage(carImage, playerCar.x, playerCar.y, playerCar.width, playerCar.height, playerCar.angle);
 }
