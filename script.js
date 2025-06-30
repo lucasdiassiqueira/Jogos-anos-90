@@ -129,11 +129,12 @@ function draw() {
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 2;
 
-  for (let y = 100; y <= 400; y += 100) {
-    for (let x = 180; x <= 750; x += 200) {
-      ctx.strokeRect(x - 30, y - 50, 60, 100); // desenhar vagas
-    }
+  const vagaXs = [180, 380, 580, 750]; // incluindo o canto direito
+for (let y = 100; y <= 400; y += 100) {
+  for (let x of vagaXs) {
+    ctx.strokeRect(x - 30, y - 50, 60, 100);
   }
+}
 
   staticParkedCars.forEach(car => {
     drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
