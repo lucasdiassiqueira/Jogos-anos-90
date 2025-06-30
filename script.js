@@ -141,16 +141,20 @@ for (let y = 100; y <= 400; y += 100) {
   });
 
    const level = levels[currentLevel];
-  ctx.setLineDash([5, 5]);
-  ctx.strokeStyle = '#4CAF50';
-  ctx.strokeRect(
-    level.parkingSpot.x - level.parkingSpot.width / 2,
-    level.parkingSpot.y - level.parkingSpot.height / 2,
-    level.parkingSpot.width,
-    level.parkingSpot.height
-  );
-  ctx.setLineDash([]); // Reseta para linha sólida
-  
+if (
+  Math.abs(playerCar.x - level.parkingSpot.x) < 40 &&  
+  Math.abs(playerCar.y - level.parkingSpot.y) < 40 &&  
+  Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
+  Math.abs(playerCar.speed) < 0.1
+) {
+  if (currentLevel < levels.length - 1) {
+    currentLevel++;
+    resetGame();
+  } else {
+    successMessage.style.display = 'block';
+  }
+}
+
   drawRotatedImage(carImage, playerCar.x, playerCar.y, playerCar.width, playerCar.height, playerCar.angle);
 }
 
