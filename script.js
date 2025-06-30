@@ -16,22 +16,32 @@ const playerCar = {
 let currentLevel = 0;
 
 const staticParkedCars = [
+  // LINHA 1
+  { x: 180, y: 100, width: 45, height: 80, angle: 0 },
   { x: 380, y: 100, width: 45, height: 80, angle: 0 },
   { x: 580, y: 100, width: 45, height: 80, angle: 0 },
+  // LINHA 2
   { x: 180, y: 200, width: 45, height: 80, angle: 0 },
+  // { x: 380, y: 200, width: 45, height: 80, angle: 0 }, // <- Vaga do 1º nível
   { x: 580, y: 200, width: 45, height: 80, angle: 0 },
+  // LINHA 3
   { x: 180, y: 300, width: 45, height: 80, angle: 0 },
+  // { x: 380, y: 300, width: 45, height: 80, angle: 0 }, // vaga livre pro 3º nível
+  { x: 580, y: 300, width: 45, height: 80, angle: 0 },
+  // LINHA 4
   { x: 180, y: 400, width: 45, height: 80, angle: 0 },
   { x: 380, y: 400, width: 45, height: 80, angle: 0 },
   { x: 580, y: 400, width: 45, height: 80, angle: 0 },
+  // CANTO DIREITO
   { x: 750, y: 100, width: 45, height: 80, angle: 0 },
-  { x: 750, y: 300, width: 45, height: 80, angle: 0 }
+  { x: 750, y: 200, width: 45, height: 80, angle: 0 },
+  // { x: 750, y: 400, width: 45, height: 80, angle: 0 }, // vaga do 3º nível, removida
 ];
 
 const levels = [
   { parkingSpot: { x: 380, y: 200, width: 60, height: 100, angle: 0 } },
   { parkingSpot: { x: 750, y: 200, width: 60, height: 100, angle: 0 } },
-  { parkingSpot: { x: 180, y: 100, width: 60, height: 100, angle: 0 } }
+  { parkingSpot: { x: 380, y: 300, width: 60, height: 100, angle: 0 } }
 ];
 
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
@@ -102,11 +112,15 @@ function update() {
   playerCar.y = Math.max(playerCar.height / 2, Math.min(canvas.height - playerCar.height / 2, playerCar.y));
 
   const level = levels[currentLevel];
+  const positionTolerance = 30;
+  const angleTolerance = 0.4;
+  const speedTolerance = 0.1;
+
   if (
-    Math.abs(playerCar.x - level.parkingSpot.x) < 20 &&
-    Math.abs(playerCar.y - level.parkingSpot.y) < 20 &&
-    Math.abs(playerCar.angle - level.parkingSpot.angle) < 0.2 &&
-    Math.abs(playerCar.speed) < 0.1
+    Math.abs(playerCar.x - level.parkingSpot.x) < positionTolerance &&
+    Math.abs(playerCar.y - level.parkingSpot.y) < positionTolerance &&
+    Math.abs(playerCar.angle - level.parkingSpot.angle) < angleTolerance &&
+    Math.abs(playerCar.speed) < speedTolerance
   ) {
     if (currentLevel < levels.length - 1) {
       currentLevel++;
@@ -125,14 +139,10 @@ function draw() {
   ctx.lineWidth = 2;
 
   for (let y = 100; y <= 400; y += 100) {
-    for (let x = 180; x <= 580; x += 200) {
+    for (let x = 180; x <= 750; x += 200) {
       ctx.strokeRect(x - 30, y - 50, 60, 100);
     }
   }
-
-  [100, 200, 300, 400].forEach(y => {
-    ctx.strokeRect(750 - 30, y - 50, 60, 100);
-  });
 
   staticParkedCars.forEach(car => {
     drawRotatedImage(parkedCarImage, car.x, car.y, car.width, car.height, car.angle);
